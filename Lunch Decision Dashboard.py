@@ -112,6 +112,19 @@ with main_col:
         else:
             st.warning("No matching lunch options found.")
 
+st.subheader("🍴 Today's Lunch Record")
+    today = datetime.date.today().strftime("%Y-%m-%d")
+    selected_place = st.selectbox("Where did you go for lunch today?", [opt["name"] for opt in st.session_state.lunch_options])
+    if st.button("📍 Record Today's Lunch"):
+        record_entry = {"date": today, "place": selected_place}
+        st.session_state.lunch_record.append(record_entry)
+        save_data(RECORD_FILE, st.session_state.lunch_record)
+        st.success(f"Recorded: {selected_place} on {today}")
+
+    st.markdown("### 📆 Past Lunch Records")
+    for record in reversed(st.session_state.lunch_record):
+        st.write(f"{record['date']}: {record['place']}")
+
     st.subheader("📊 Vote for Your Favorite")
     for i, opt in enumerate(st.session_state.lunch_options):
         with st.container():
@@ -129,20 +142,7 @@ with main_col:
                 st.session_state.lunch_options[i]["votes"] += 1
                 save_data(OPTIONS_FILE, st.session_state.lunch_options)
                 st.success(f"Thanks for voting for {opt['name']}!")
-
-    st.subheader("🍴 Today's Lunch Record")
-    today = datetime.date.today().strftime("%Y-%m-%d")
-    selected_place = st.selectbox("Where did you go for lunch today?", [opt["name"] for opt in st.session_state.lunch_options])
-    if st.button("📍 Record Today's Lunch"):
-        record_entry = {"date": today, "place": selected_place}
-        st.session_state.lunch_record.append(record_entry)
-        save_data(RECORD_FILE, st.session_state.lunch_record)
-        st.success(f"Recorded: {selected_place} on {today}")
-
-    st.markdown("### 📆 Past Lunch Records")
-    for record in reversed(st.session_state.lunch_record):
-        st.write(f"{record['date']}: {record['place']}")
-
+    
     st.subheader("📋 Current Lunch Options")
     for opt in st.session_state.lunch_options:
         st.write(f"{opt['name']} ({opt['location']}, {opt['diet']}) - Votes: {opt['votes']}")
@@ -157,5 +157,6 @@ with suggestion_col:
         st.success(f"Today's Top Pick: {top_pick['name']} ({top_pick['location']}, {top_pick['diet']})")
     else:
         st.info("Add lunch options to get smart suggestions.")
+
 
 
