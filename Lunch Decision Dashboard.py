@@ -86,19 +86,6 @@ main_col, suggestion_col = st.columns([3, 2])
 
 # --- Main Column ---
 with main_col:
-    st.subheader("🍴 Today's Lunch Record")
-    today = datetime.date.today().strftime("%Y-%m-%d")
-    selected_place = st.selectbox("Where did you go for lunch today?", [opt["name"] for opt in st.session_state.lunch_options])
-    if st.button("📍 Record Today's Lunch"):
-        record_entry = {"date": today, "place": selected_place}
-        st.session_state.lunch_record.append(record_entry)
-        save_data(RECORD_FILE, st.session_state.lunch_record)
-        st.success(f"Recorded: {selected_place} on {today}")
-
-    st.markdown("### 📆 Past Lunch Records")
-    for record in reversed(st.session_state.lunch_record):
-        st.write(f"{record['date']}: {record['place']}")
-
     st.subheader("🔍 Filter & Suggest Lunch Spot")
     filter_location = st.selectbox("Filter by Location", ["Any"] + list(set([opt["location"] for opt in st.session_state.lunch_options])))
     filter_diet = st.selectbox("Filter by Dietary Preference", ["Any", "Halal", "Non-Halal", "Vegetarian", "Vegan", "Gluten-Free"])
@@ -124,6 +111,19 @@ with main_col:
             )
         else:
             st.warning("No matching lunch options found.")
+
+    st.subheader("🍴 Today's Lunch Record")
+    today = datetime.date.today().strftime("%Y-%m-%d")
+    selected_place = st.selectbox("Where did you go for lunch today?", [opt["name"] for opt in st.session_state.lunch_options])
+    if st.button("📍 Record Today's Lunch"):
+        record_entry = {"date": today, "place": selected_place}
+        st.session_state.lunch_record.append(record_entry)
+        save_data(RECORD_FILE, st.session_state.lunch_record)
+        st.success(f"Recorded: {selected_place} on {today}")
+
+    st.markdown("### 📆 Past Lunch Records")
+    for record in reversed(st.session_state.lunch_record):
+        st.write(f"{record['date']}: {record['place']}")
 
     st.subheader("📊 Vote for Your Favorite")
     for i, opt in enumerate(st.session_state.lunch_options):
