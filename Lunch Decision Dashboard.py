@@ -156,3 +156,4 @@ with suggestion_col:
         top_pick = sorted_options[0]
         st.success(f"Today's Top Pick: {top_pick['name']} ({top_pick['location']}, {top_pick['diet']})")
     else:
+        st.info("Add lunch options to get smart suggestions.")
