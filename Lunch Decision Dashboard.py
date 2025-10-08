@@ -90,7 +90,10 @@ if st.button("🎲 Suggest Lunch Spot"):
             f"""
             <div style="padding: 15px; background-color: #e6f7ff; border-radius: 10px; border: 2px solid #1890ff;">
                 <h3 style="color: #1890ff;">
-                🎲 <strong>{suggestion['name']}</strong> /n Location: {suggestion['location']} /n Diet: {suggestion['diet']} /n Votes: {suggestion['votes']}
+                🎲 <strong>{suggestion['name']}</strong><br>
+                Location: {suggestion['location']}<br>
+                Diet: {suggestion['diet']}<br>
+                Votes: {suggestion['votes']}
                 </h3>
             </div>
             """,
@@ -125,7 +128,7 @@ if st.button("🎲 Suggest Lunch Spot"):
 
 # --- Smart Suggestion Box ---
 with suggestion_col:
-    st.markdown("## 🤔 Smart Suggestion Box (You Vote la, then see how)")
+    st.markdown("<h5>🤔 Smart Suggestion Box <span style='font-weight:normal;'>(You Vote la, then see how)</span></h5>", unsafe_allow_html=True)
     if st.session_state.lunch_options:
         scores = {}
         for opt in st.session_state.lunch_options:
@@ -142,4 +145,5 @@ with suggestion_col:
         st.success(f"Today's Top Pick: {top_pick['name']} ({top_pick['location']}, {top_pick['diet']})")
     else:
         st.info("Add lunch options to get smart suggestions.")
+
 
