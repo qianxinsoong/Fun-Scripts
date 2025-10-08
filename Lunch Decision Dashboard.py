@@ -75,7 +75,7 @@ main_col, suggestion_col = st.columns([3, 2])
 with main_col:
     st.subheader("🔍 Filter & Suggest Lunch Spot")
     filter_location = st.selectbox("Filter by Location", ["Any"] + list(set([opt["location"] for opt in st.session_state.lunch_options])))
-    filter_diet = st.selectbox("Filter by Dietary Preference", ["Any", "Halal", "Vegetarian", "Vegan", "Gluten-Free"])
+    filter_diet = st.selectbox("Filter by Dietary Preference", ["Any", "Halal", "Non-Halal", "Vegetarian", "Vegan", "Gluten-Free"])
 
     filtered_options = [
         opt for opt in st.session_state.lunch_options
@@ -125,7 +125,7 @@ if st.button("🎲 Suggest Lunch Spot"):
 
 # --- Smart Suggestion Box ---
 with suggestion_col:
-    st.markdown("""<p style='font-size:19px; font-weight:bold; margin-bottom:0;'>🤔 Today's Suggestion</h2><p style='font-size:14px; margin-top: 0;'>You Vote la, then see how</p>""", unsafe_allow_html=True)
+    st.markdown("""<p style='font-size:24px; font-weight:bold; margin-bottom:0;'>🤔 Today's Suggestion</h2><p style='font-size:14px; margin-top: 0;'>You Vote la, then see how</p>""", unsafe_allow_html=True)
     if st.session_state.lunch_options:
         scores = {}
         for opt in st.session_state.lunch_options:
@@ -142,6 +142,7 @@ with suggestion_col:
         st.success(f"Today's Top Pick: {top_pick['name']} ({top_pick['location']}, {top_pick['diet']})")
     else:
         st.info("Add lunch options to get smart suggestions.")
+
 
 
 
