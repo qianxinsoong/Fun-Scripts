@@ -7,6 +7,7 @@ import os
 # --- File paths for persistent storage ---
 OPTIONS_FILE = "lunch_options.json"
 HISTORY_FILE = "lunch_history.json"
+RECORD_FILE = "lunch_record.json"
 
 # --- Default lunch options ---
 default_options = [
@@ -27,7 +28,7 @@ default_options = [
     {"name": "Subway", "location": "Batu Kawan", "diet": "Gluten-Free", "votes": 0}
 ]
 
-# --- Load data from JSON files ---
+# --- Load and Save JSON ---
 def load_data(file_path, default_data):
     if os.path.exists(file_path):
         with open(file_path, "r") as f:
@@ -35,7 +36,6 @@ def load_data(file_path, default_data):
     else:
         return default_data
 
-# --- Save data to JSON files ---
 def save_data(file_path, data):
     with open(file_path, "w") as f:
         json.dump(data, f, indent=2)
@@ -44,8 +44,8 @@ def save_data(file_path, data):
 if "lunch_options" not in st.session_state:
     st.session_state.lunch_options = load_data(OPTIONS_FILE, default_options)
 
-if "history" not in st.session_state:
-    st.session_state.history = load_data(HISTORY_FILE, [])
+if "lunch_record" not in st.session_state:
+    st.session_state.lunch_record = load_data(RECORD_FILE, [])
 
 # --- Title ---
 st.title("🍽️ Lunch Decision Dashboard")
@@ -110,14 +110,6 @@ with main_col:
                 """,
                 unsafe_allow_html=True
             )
-            new_entry = {
-                "name": suggestion["name"],
-                "location": suggestion["location"],
-                "diet": suggestion["diet"],
-                "timestamp": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            }
-            st.session_state.history.append(new_entry)
-            save_data(HISTORY_FILE, st.session_state.history)
         else:
             st.warning("No matching lunch options found.")
 
@@ -139,23 +131,28 @@ with main_col:
                 save_data(OPTIONS_FILE, st.session_state.lunch_options)
                 st.success(f"Thanks for voting for {opt['name']}!")
 
-    st.subheader("🗂️ Lunch Decision History")
-    for entry in reversed(st.session_state.history):
-        st.write(f"{entry['timestamp']}: {entry['name']} ({entry['location']}, {entry['diet']})")
-
     st.subheader("📋 Current Lunch Options")
     for opt in st.session_state.lunch_options:
         st.write(f"{opt['name']} ({opt['location']}, {opt['diet']}) - Votes: {opt['votes']}")
+
+    st.subheader("🍴 Today's Lunch Record")
+    today = datetime.date.today().strftime("%Y-%m-%d")
+    selected_place = st.selectbox("Where did you go for lunch today?", [opt["name"] for opt in st.session_state.lunch_options])
+    if st.button("📍 Record Today's Lunch"):
+        record_entry = {"date": today, "place": selected_place}
+        st.session_state.lunch_record.append(record_entry)
+        save_data(RECORD_FILE, st.session_state.lunch_record)
+        st.success(f"Recorded: {selected_place} on {today}")
+
+    st.markdown("### 📆 Past Lunch Records")
+    for record in reversed(st.session_state.lunch_record):
+        st.write(f"{record['date']}: {record['place']}")
 
 # --- Smart Suggestion Box ---
 with suggestion_col:
     st.markdown("""<p style='font-size:24px; font-weight:bold; margin-bottom:0;'>🤔 Today's Suggestion</p><p style='font-size:14px; margin-top: 0;'>You Vote la, then see how</p>""", unsafe_allow_html=True)
     if st.session_state.lunch_options:
         scores = {opt['name']: opt['votes'] for opt in st.session_state.lunch_options}
-        recent_names = [entry['name'] for entry in st.session_state.history[-5:]]
-        for name in recent_names:
-            if name in scores:
-                scores[name] += 2
         sorted_options = sorted(st.session_state.lunch_options, key=lambda x: scores.get(x['name'], 0), reverse=True)
         top_pick = sorted_options[0]
         st.success(f"Today's Top Pick: {top_pick['name']} ({top_pick['location']}, {top_pick['diet']})")
