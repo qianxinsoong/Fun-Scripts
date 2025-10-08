@@ -125,7 +125,7 @@ if st.button("🎲 Suggest Lunch Spot"):
 
 # --- Smart Suggestion Box ---
 with suggestion_col:
-    st.markdown("""<h2 style='margin-bottom: 0;'>🤔 Smart Suggestion Box</h2><p style='font-size:13px; margin-top: 0;'>You Vote la, then see how</p>""", unsafe_allow_html=True)
+    st.markdown("""<h2 style='margin-bottom: 0;'>🤔 Today's Suggestion</h2><p style='font-size:14px; margin-top: 0;'>You Vote la, then see how</p>""", unsafe_allow_html=True)
     if st.session_state.lunch_options:
         scores = {}
         for opt in st.session_state.lunch_options:
@@ -142,6 +142,7 @@ with suggestion_col:
         st.success(f"Today's Top Pick: {top_pick['name']} ({top_pick['location']}, {top_pick['diet']})")
     else:
         st.info("Add lunch options to get smart suggestions.")
+
 
 
 
