@@ -72,4 +72,28 @@ for entry in reversed(st.session_state.history):
 # Display all current options
 st.subheader("📋 Current Lunch Options")
 for opt in st.session_state.lunch_options:
+
     st.write(f"{opt['name']} ({opt['location']}, {opt['diet']}) - Votes: {opt['votes']}")
+
+# Smart suggestion box based on history and votes
+st.markdown("### 🤔 Smart Suggestion Box")
+if st.session_state.lunch_options:
+    # Score each option based on votes and recent history
+    scores = {}
+    for opt in st.session_state.lunch_options:
+        scores[opt['name']] = opt['votes']
+
+    # Boost score if recently selected
+    recent_names = [entry['name'] for entry in st.session_state.history[-5:]]
+    for name in recent_names:
+        if name in scores:
+            scores[name] += 2  # boost recent picks
+
+    # Sort by score
+    sorted_options = sorted(st.session_state.lunch_options, key=lambda x: scores.get(x['name'], 0), reverse=True)
+    top_pick = sorted_options[0]
+
+    # Display in a highlighted box
+    st.success(f"🤖 Based on votes and history, we recommend: **{top_pick['name']}** ({top_pick['location']}, {top_pick['diet']})")
+else:
+    st.info("Add lunch options to get smart suggestions.")
