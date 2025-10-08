@@ -68,6 +68,20 @@ if st.sidebar.button("Add Option"):
     else:
         st.sidebar.error("Please enter both name and location.")
 
+# --- Admin Panel for Resetting Votes ---
+st.sidebar.header("🔐 Admin Panel")
+admin_password = st.sidebar.text_input("Enter Admin Password", type="password")
+
+if admin_password == "admin123":
+    st.sidebar.subheader("🔄 Reset Voting System")
+    if st.sidebar.button("🔄 Reset All Votes"):
+        for option in st.session_state.lunch_options:
+            option["votes"] = 0
+        save_data(OPTIONS_FILE, st.session_state.lunch_options)
+        st.sidebar.success("✅ All votes have been reset to zero.")
+elif admin_password:
+    st.sidebar.error("❌ Incorrect password.")
+
 # --- Layout: Two columns ---
 main_col, suggestion_col = st.columns([3, 2])
 
@@ -83,37 +97,47 @@ with main_col:
            (filter_diet == "Any" or opt["diet"] == filter_diet)
     ]
 
-if st.button("🎲 Suggest Lunch Spot"):
-    if filtered_options:
-        suggestion = random.choice(filtered_options)
-        st.markdown(
-            f"""
-            <div style="padding: 13px; background-color: #e6f7ff; border-radius: 10px; border: 2px solid #1890ff;">
-                <h3 style="color: #1890ff;">
-                🎲 <strong>{suggestion['name']}</strong>  |  Location: {suggestion['location']}  |  Diet: {suggestion['diet']}
-                </h3>
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
-        new_entry = {
-            "name": suggestion["name"],
-            "location": suggestion["location"],
-            "diet": suggestion["diet"],
-            "timestamp": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        }
-        st.session_state.history.append(new_entry)
-        save_data(HISTORY_FILE, st.session_state.history)
-    else:
-        st.warning("No matching lunch options found.")
+    if st.button("🎲 Suggest Lunch Spot"):
+        if filtered_options:
+            suggestion = random.choice(filtered_options)
+            st.markdown(
+                f"""
+                <div style="padding: 13px; background-color: #e6f7ff; border-radius: 10px; border: 2px solid #1890ff;">
+                    <h3 style="color: #1890ff;">
+                    🎲 <strong>{suggestion['name']}</strong>  |  Location: {suggestion['location']}  |  Diet: {suggestion['diet']}
+                    </h3>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+            new_entry = {
+                "name": suggestion["name"],
+                "location": suggestion["location"],
+                "diet": suggestion["diet"],
+                "timestamp": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            }
+            st.session_state.history.append(new_entry)
+            save_data(HISTORY_FILE, st.session_state.history)
+        else:
+            st.warning("No matching lunch options found.")
 
     st.subheader("📊 Vote for Your Favorite")
     for i, opt in enumerate(st.session_state.lunch_options):
-        cols = st.columns([3, 1])
-        cols[0].write(f"{opt['name']} ({opt['location']}, {opt['diet']}) - Votes: {opt['votes']}")
-        if cols[1].button(f"Vote {i}"):
-            st.session_state.lunch_options[i]["votes"] += 1
-            save_data(OPTIONS_FILE, st.session_state.lunch_options)
+        with st.container():
+            st.markdown(
+                f"""
+                <div style="padding: 10px; border: 1px solid #ccc; border-radius: 8px; margin-bottom: 10px;">
+                    <strong style="font-size: 18px;">{opt['name']}</strong><br>
+                    <span style="font-size: 14px;">Location: {opt['location']} | Diet: {opt['diet']}</span><br>
+                    <span style="font-size: 14px;">Votes: {opt['votes']}</span>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+            if st.button(f"👍 Vote for {opt['name']}", key=f"vote_{i}"):
+                st.session_state.lunch_options[i]["votes"] += 1
+                save_data(OPTIONS_FILE, st.session_state.lunch_options)
+                st.success(f"Thanks for voting for {opt['name']}!")
 
     st.subheader("🗂️ Lunch Decision History")
     for entry in reversed(st.session_state.history):
@@ -125,32 +149,15 @@ if st.button("🎲 Suggest Lunch Spot"):
 
 # --- Smart Suggestion Box ---
 with suggestion_col:
-    st.markdown("""<p style='font-size:24px; font-weight:bold; margin-bottom:0;'>🤔 Today's Suggestion</h2><p style='font-size:14px; margin-top: 0;'>You Vote la, then see how</p>""", unsafe_allow_html=True)
+    st.markdown("""<p style='font-size:24px; font-weight:bold; margin-bottom:0;'>🤔 Today's Suggestion</p><p style='font-size:14px; margin-top: 0;'>You Vote la, then see how</p>""", unsafe_allow_html=True)
     if st.session_state.lunch_options:
-        scores = {}
-        for opt in st.session_state.lunch_options:
-            scores[opt['name']] = opt['votes']
-    
+        scores = {opt['name']: opt['votes'] for opt in st.session_state.lunch_options}
         recent_names = [entry['name'] for entry in st.session_state.history[-5:]]
         for name in recent_names:
             if name in scores:
                 scores[name] += 2
-    
         sorted_options = sorted(st.session_state.lunch_options, key=lambda x: scores.get(x['name'], 0), reverse=True)
         top_pick = sorted_options[0]
-    
         st.success(f"Today's Top Pick: {top_pick['name']} ({top_pick['location']}, {top_pick['diet']})")
     else:
         st.info("Add lunch options to get smart suggestions.")
-
-
-
-
-
-
-
-
-
-
-
-
