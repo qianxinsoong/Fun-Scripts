@@ -100,9 +100,11 @@ with main_col:
 
     st.subheader("📊 Vote for Your Favorite")
     for i, opt in enumerate(st.session_state.lunch_options):
-        cols = st.columns([3, 1])
-        cols[0].write(f"{opt['name']} ({opt['location']}, {opt['diet']}) - Votes: {opt['votes']}")
-        if cols[1].button(f"Vote {i}"):
+        vote_col1, vote_col2 = st.columns([5, 1])
+        vote_col1.markdown(
+            f"**{opt['name']}** | Location: {opt['location']} | Diet: {opt['diet']} | Votes: {opt['votes']}"
+        )
+        if vote_col2.button(f"👍 Vote {i}"):
             st.session_state.lunch_options[i]["votes"] += 1
             save_data(OPTIONS_FILE, st.session_state.lunch_options)
 
@@ -132,12 +134,10 @@ with suggestion_col:
 
         st.markdown(
             f"""
-            <div style="padding: 20px; background-color: #dff0d8; border-radius: 10px; border: 2px solid #3c763d;">
-                <h2 style="color: #3c763d;">🍴 Today's Top Pick</h2>
-                <h3>{top_pick['name']}</h3>
-                <p><strong>Location:</strong> {top_pick['location']}</p>
-                <p><strong>Dietary Preference:</strong> {top_pick['diet']}</p>
-                <p><strong>Votes:</strong> {top_pick['votes']}</p>
+            <div style="padding: 15px; background-color: #dff0d8; border-radius: 10px; border: 2px solid #3c763d;">
+                <h3 style="color: #3c763d;">
+                🍴 <strong>{top_pick['name']}</strong> | Location: {top_pick['location']} | Diet: {top_pick['diet']} | Votes: {top_pick['votes']}
+                </h3>
             </div>
             """,
             unsafe_allow_html=True
