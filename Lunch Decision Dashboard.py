@@ -1,18 +1,56 @@
 import streamlit as st
 import random
 import datetime
+import json
+import os
 
-# Initialize session state variables
+# --- File paths for persistent storage ---
+OPTIONS_FILE = "lunch_options.json"
+HISTORY_FILE = "lunch_history.json"
+
+# --- Default lunch options ---
+default_options = [
+    {"name": "Nasi Kandar Nasmeer", "location": "Borealis", "diet": "Halal", "votes": 0},
+    {"name": "Taiwan Palace", "location": "Borealis", "diet": "Non-Halal", "votes": 0},
+    {"name": "Korean BBQ", "location": "Borealis", "diet": "Non-Halal", "votes": 0},
+    {"name": "Sushi Ya", "location": "Borealis", "diet": "Halal", "votes": 0},
+    {"name": "Nasi Kandar Ali Khan", "location": "Borealis", "diet": "Halal", "votes": 0},
+    {"name": "Secret Recipe", "location": "Borealis", "diet": "Halal", "votes": 0},
+    {"name": "Nasi Lemak Ketua Kampung", "location": "Borealis", "diet": "Halal", "votes": 0},
+    {"name": "Dragon Noodles", "location": "Borealis", "diet": "Non-Halal", "votes": 0},
+    {"name": "Inside Scoop", "location": "Borealis", "diet": "Desert", "votes": 0},
+    {"name": "Burger King", "location": "Design Village", "diet": "Any", "votes": 0},
+    {"name": "Padi House", "location": "Design Village", "diet": "Any", "votes": 0},
+    {"name": "Design Village Food Court", "location": "Design Village", "diet": "Any", "votes": 0},
+    {"name": "Thai Tuk Tuk", "location": "Utropolis", "diet": "Non-Halal", "votes": 0},
+    {"name": "The Ship Chinese Food", "location": "Batu Kawan", "diet": "Halal", "votes": 0},
+    {"name": "Subway", "location": "Batu Kawan", "diet": "Gluten-Free", "votes": 0}
+]
+
+# --- Load data from JSON files ---
+def load_data(file_path, default_data):
+    if os.path.exists(file_path):
+        with open(file_path, "r") as f:
+            return json.load(f)
+    else:
+        return default_data
+
+# --- Save data to JSON files ---
+def save_data(file_path, data):
+    with open(file_path, "w") as f:
+        json.dump(data, f, indent=2)
+
+# --- Initialize session state ---
 if "lunch_options" not in st.session_state:
-    st.session_state.lunch_options = []
+    st.session_state.lunch_options = load_data(OPTIONS_FILE, default_options)
 
 if "history" not in st.session_state:
-    st.session_state.history = []
+    st.session_state.history = load_data(HISTORY_FILE, [])
 
-# Title
+# --- Title ---
 st.title("🍽️ Lunch Decision Dashboard")
 
-# Sidebar for adding new lunch options
+# --- Sidebar: Add new lunch option ---
 st.sidebar.header("➕ Add Lunch Option")
 name = st.sidebar.text_input("Restaurant Name")
 location = st.sidebar.text_input("Location")
@@ -20,20 +58,20 @@ diet = st.sidebar.selectbox("Dietary Preference", ["Any", "Halal", "Vegetarian",
 
 if st.sidebar.button("Add Option"):
     if name and location:
-        st.session_state.lunch_options.append({
-            "name": name,
-            "location": location,
-            "diet": diet,
-            "votes": 0
-        })
-        st.sidebar.success(f"Added {name} to lunch options.")
+        new_option = {"name": name, "location": location, "diet": diet, "votes": 0}
+        if not any(opt["name"].lower() == name.lower() for opt in st.session_state.lunch_options):
+            st.session_state.lunch_options.append(new_option)
+            save_data(OPTIONS_FILE, st.session_state.lunch_options)
+            st.sidebar.success(f"Added {name} to lunch options.")
+        else:
+            st.sidebar.warning(f"{name} is already in the list.")
     else:
         st.sidebar.error("Please enter both name and location.")
 
-# Create two columns for layout
+# --- Layout: Two columns ---
 main_col, suggestion_col = st.columns([3, 2])
 
-# Main column with interactive features
+# --- Main Column ---
 with main_col:
     st.subheader("🔍 Filter & Suggest Lunch Spot")
     filter_location = st.selectbox("Filter by Location", ["Any"] + list(set([opt["location"] for opt in st.session_state.lunch_options])))
@@ -49,12 +87,14 @@ with main_col:
         if filtered_options:
             suggestion = random.choice(filtered_options)
             st.success(f"Today's suggestion: {suggestion['name']} ({suggestion['location']}, {suggestion['diet']})")
-            st.session_state.history.append({
+            new_entry = {
                 "name": suggestion["name"],
                 "location": suggestion["location"],
                 "diet": suggestion["diet"],
                 "timestamp": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            })
+            }
+            st.session_state.history.append(new_entry)
+            save_data(HISTORY_FILE, st.session_state.history)
         else:
             st.warning("No matching lunch options found.")
 
@@ -64,6 +104,7 @@ with main_col:
         cols[0].write(f"{opt['name']} ({opt['location']}, {opt['diet']}) - Votes: {opt['votes']}")
         if cols[1].button(f"Vote {i}"):
             st.session_state.lunch_options[i]["votes"] += 1
+            save_data(OPTIONS_FILE, st.session_state.lunch_options)
 
     st.subheader("🗂️ Lunch Decision History")
     for entry in reversed(st.session_state.history):
@@ -73,7 +114,7 @@ with main_col:
     for opt in st.session_state.lunch_options:
         st.write(f"{opt['name']} ({opt['location']}, {opt['diet']}) - Votes: {opt['votes']}")
 
-# Smart suggestion box in the right column
+# --- Smart Suggestion Box ---
 with suggestion_col:
     st.markdown("## 🤔 Smart Suggestion Box")
     if st.session_state.lunch_options:
