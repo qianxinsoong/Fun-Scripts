@@ -4,9 +4,8 @@ import datetime
 import json
 import os
 
-# --- File paths for persistent storage ---
+# --- File paths ---
 OPTIONS_FILE = "lunch_options.json"
-HISTORY_FILE = "lunch_history.json"
 RECORD_FILE = "lunch_record.json"
 
 # --- Default lunch options ---
@@ -68,7 +67,7 @@ if st.sidebar.button("Add Option"):
     else:
         st.sidebar.error("Please enter both name and location.")
 
-# --- Admin Panel for Resetting Votes ---
+# --- Admin Panel ---
 st.sidebar.header("🔐 Admin Panel")
 admin_password = st.sidebar.text_input("Enter Admin Password", type="password")
 
@@ -131,10 +130,6 @@ with main_col:
                 save_data(OPTIONS_FILE, st.session_state.lunch_options)
                 st.success(f"Thanks for voting for {opt['name']}!")
 
-    st.subheader("📋 Current Lunch Options")
-    for opt in st.session_state.lunch_options:
-        st.write(f"{opt['name']} ({opt['location']}, {opt['diet']}) - Votes: {opt['votes']}")
-
     st.subheader("🍴 Today's Lunch Record")
     today = datetime.date.today().strftime("%Y-%m-%d")
     selected_place = st.selectbox("Where did you go for lunch today?", [opt["name"] for opt in st.session_state.lunch_options])
@@ -148,6 +143,10 @@ with main_col:
     for record in reversed(st.session_state.lunch_record):
         st.write(f"{record['date']}: {record['place']}")
 
+    st.subheader("📋 Current Lunch Options")
+    for opt in st.session_state.lunch_options:
+        st.write(f"{opt['name']} ({opt['location']}, {opt['diet']}) - Votes: {opt['votes']}")
+
 # --- Smart Suggestion Box ---
 with suggestion_col:
     st.markdown("""<p style='font-size:24px; font-weight:bold; margin-bottom:0;'>🤔 Today's Suggestion</p><p style='font-size:14px; margin-top: 0;'>You Vote la, then see how</p>""", unsafe_allow_html=True)
@@ -157,4 +156,3 @@ with suggestion_col:
         top_pick = sorted_options[0]
         st.success(f"Today's Top Pick: {top_pick['name']} ({top_pick['location']}, {top_pick['diet']})")
     else:
-        st.info("Add lunch options to get smart suggestions.")
