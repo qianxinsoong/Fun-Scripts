@@ -53,7 +53,7 @@ st.title("🍽️ Lunch Decision Dashboard")
 st.sidebar.header("➕ Add Lunch Option")
 name = st.sidebar.text_input("Restaurant Name")
 location = st.sidebar.text_input("Location")
-diet = st.sidebar.selectbox("Dietary Preference", ["Any", "Halal", "Non-Halal, "Vegetarian", "Vegan", "Gluten-Free"])
+diet = st.sidebar.selectbox("Dietary Preference", ["Any", "Halal", "Non-Halal", "Vegetarian", "Vegan", "Gluten-Free"])
 
 if st.sidebar.button("Add Option"):
     if name and location:
@@ -168,3 +168,4 @@ with suggestion_col:
         st.success(f"Today's Top Pick: {top_pick['name']} ({top_pick['location']}, {top_pick['diet']})")
     else:
         st.info("Add lunch options to get smart suggestions.")
+
