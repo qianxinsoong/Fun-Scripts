@@ -177,7 +177,7 @@ with suggestion_col:
             }])
             st.map(map_data)
         else:
-            default_map_data = pd.DataFrame([{"lat": 5.370, "lon": 100.480}])  # Batu Kawan default
+            default_map_data = pd.DataFrame([{"lat": 5.2189, "lon": 100.4491}])  # Micron Memory Sdn. Bhd. default
             st.map(default_map_data)
 
         st.markdown("### 📊 Voting Trends")
@@ -190,3 +190,4 @@ with suggestion_col:
         st.altair_chart(chart, use_container_width=True)
     else:
         st.info("Add lunch options to get smart suggestions.")
+
