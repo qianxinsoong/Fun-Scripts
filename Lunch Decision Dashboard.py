@@ -206,3 +206,4 @@ with suggestion_col:
         st.metric("Total Votes", sum(opt["votes"] for opt in st.session_state.lunch_options))
         st.metric("Lunch Records", len(st.session_state.lunch_record))
     else:
+        st.info("Add lunch options to get smart suggestions.")
