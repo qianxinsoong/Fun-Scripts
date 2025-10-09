@@ -16,16 +16,7 @@ default_options = [
     {"name": "Taiwan Palace", "location": "Borealis", "diet": "Non-Halal", "votes": 0, "lat": 5.337, "lon": 100.446},
     {"name": "Korean BBQ", "location": "Borealis", "diet": "Non-Halal", "votes": 0, "lat": 5.338, "lon": 100.447},
     {"name": "Sushi Ya", "location": "Borealis", "diet": "Halal", "votes": 0, "lat": 5.339, "lon": 100.448},
-    {"name": "Nasi Kandar Ali Khan", "location": "Borealis", "diet": "Halal", "votes": 0, "lat": 5.340, "lon": 100.449},
-    {"name": "Secret Recipe", "location": "Borealis", "diet": "Halal", "votes": 0, "lat": 5.341, "lon": 100.450},
-    {"name": "Nasi Lemak Ketua Kampung", "location": "Borealis", "diet": "Halal", "votes": 0, "lat": 5.342, "lon": 100.451},
-    {"name": "Dragon Noodles", "location": "Borealis", "diet": "Non-Halal", "votes": 0, "lat": 5.343, "lon": 100.452},
-    {"name": "Inside Scoop", "location": "Borealis", "diet": "Desert", "votes": 0, "lat": 5.344, "lon": 100.453},
     {"name": "Burger King", "location": "Design Village", "diet": "Any", "votes": 0, "lat": 5.350, "lon": 100.460},
-    {"name": "Padi House", "location": "Design Village", "diet": "Any", "votes": 0, "lat": 5.351, "lon": 100.461},
-    {"name": "Design Village Food Court", "location": "Design Village", "diet": "Any", "votes": 0, "lat": 5.352, "lon": 100.462},
-    {"name": "Thai Tuk Tuk", "location": "Utropolis", "diet": "Non-Halal", "votes": 0, "lat": 5.360, "lon": 100.470},
-    {"name": "The Ship Chinese Food", "location": "Batu Kawan", "diet": "Halal", "votes": 0, "lat": 5.370, "lon": 100.480},
     {"name": "Subway", "location": "Batu Kawan", "diet": "Gluten-Free", "votes": 0, "lat": 5.371, "lon": 100.481}
 ]
 
@@ -174,12 +165,20 @@ with suggestion_col:
         top_pick = sorted_options[0]
         st.success(f"Today's Top Pick: {top_pick['name']} ({top_pick['location']}, {top_pick['diet']})")
 
-        st.markdown("### 🗺️ Lunch Spot Locations")
-        map_data = pd.DataFrame([
+        st.markdown("### 🗺️ Lunch Spot Locations (Filtered)")
+        map_filtered_data = pd.DataFrame([
             {"lat": opt["lat"], "lon": opt["lon"]}
-            for opt in st.session_state.lunch_options if "lat" in opt and "lon" in opt
+            for opt in filtered_options if "lat" in opt and "lon" in opt
         ])
-        st.map(map_data)
+        if not map_filtered_data.empty:
+            st.map(map_filtered_data)
+        else:
+            st.info("No matching locations to display on the map.")
+
+        st.markdown("### 📍 Today's Lunch Location")
+        selected_spot = next((opt for opt in st.session_state.lunch_options if opt["name"] == selected_place), None)
+        if selected_spot and "lat" in selected_spot and "lon" in selected_spot:
+            st.map(pd.DataFrame([{"lat": selected_spot["lat"], "lon": selected_spot["lon"]}]))
 
         st.markdown("### 📊 Voting Trends")
         df_votes = pd.DataFrame(st.session_state.lunch_options)
