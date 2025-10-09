@@ -53,7 +53,7 @@ st.title("🍽️ Lunch Decision Dashboard")
 st.sidebar.header("➕ Add Lunch Option")
 name = st.sidebar.text_input("Restaurant Name")
 location = st.sidebar.text_input("Location")
-diet = st.sidebar.selectbox("Dietary Preference", ["Any", "Halal", "Non-Halal", "Vegetarian", "Vegan", "Gluten-Free"])
+diet = st.sidebar.selectbox("Dietary Preference", ["Any", "Halal", "Non-Halal, "Vegetarian", "Vegan", "Gluten-Free"])
 
 if st.sidebar.button("Add Option"):
     if name and location:
@@ -125,8 +125,19 @@ with main_col:
     for record in reversed(st.session_state.lunch_record):
         st.write(f"{record['date']}: {record['place']}")
 
+    # --- Voting Section with Filters ---
     st.subheader("📊 Vote for Your Favorite")
-    for i, opt in enumerate(st.session_state.lunch_options):
+
+    vote_location = st.selectbox("Filter by Location (Voting)", ["Any"] + sorted(set(opt["location"] for opt in st.session_state.lunch_options)))
+    vote_diet = st.selectbox("Filter by Dietary Preference (Voting)", ["Any"] + sorted(set(opt["diet"] for opt in st.session_state.lunch_options)))
+
+    vote_filtered_options = [
+        opt for opt in st.session_state.lunch_options
+        if (vote_location == "Any" or opt["location"] == vote_location) and
+           (vote_diet == "Any" or opt["diet"] == vote_diet)
+    ]
+
+    for i, opt in enumerate(vote_filtered_options):
         with st.container():
             st.markdown(
                 f"""
@@ -139,7 +150,7 @@ with main_col:
                 unsafe_allow_html=True
             )
             if st.button(f"👍 Vote for {opt['name']}", key=f"vote_{i}"):
-                st.session_state.lunch_options[i]["votes"] += 1
+                opt["votes"] += 1
                 save_data(OPTIONS_FILE, st.session_state.lunch_options)
                 st.success(f"Thanks for voting for {opt['name']}!")
 
@@ -157,4 +168,3 @@ with suggestion_col:
         st.success(f"Today's Top Pick: {top_pick['name']} ({top_pick['location']}, {top_pick['diet']})")
     else:
         st.info("Add lunch options to get smart suggestions.")
-
