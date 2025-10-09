@@ -3,28 +3,30 @@ import random
 import datetime
 import json
 import os
+import pandas as pd
+import altair as alt
 
 # --- File paths ---
 OPTIONS_FILE = "lunch_options.json"
 RECORD_FILE = "lunch_record.json"
 
-# --- Default lunch options ---
+# --- Default lunch options with coordinates ---
 default_options = [
-    {"name": "Nasi Kandar Nasmeer", "location": "Borealis", "diet": "Halal", "votes": 0},
-    {"name": "Taiwan Palace", "location": "Borealis", "diet": "Non-Halal", "votes": 0},
-    {"name": "Korean BBQ", "location": "Borealis", "diet": "Non-Halal", "votes": 0},
-    {"name": "Sushi Ya", "location": "Borealis", "diet": "Halal", "votes": 0},
-    {"name": "Nasi Kandar Ali Khan", "location": "Borealis", "diet": "Halal", "votes": 0},
-    {"name": "Secret Recipe", "location": "Borealis", "diet": "Halal", "votes": 0},
-    {"name": "Nasi Lemak Ketua Kampung", "location": "Borealis", "diet": "Halal", "votes": 0},
-    {"name": "Dragon Noodles", "location": "Borealis", "diet": "Non-Halal", "votes": 0},
-    {"name": "Inside Scoop", "location": "Borealis", "diet": "Desert", "votes": 0},
-    {"name": "Burger King", "location": "Design Village", "diet": "Any", "votes": 0},
-    {"name": "Padi House", "location": "Design Village", "diet": "Any", "votes": 0},
-    {"name": "Design Village Food Court", "location": "Design Village", "diet": "Any", "votes": 0},
-    {"name": "Thai Tuk Tuk", "location": "Utropolis", "diet": "Non-Halal", "votes": 0},
-    {"name": "The Ship Chinese Food", "location": "Batu Kawan", "diet": "Halal", "votes": 0},
-    {"name": "Subway", "location": "Batu Kawan", "diet": "Gluten-Free", "votes": 0}
+    {"name": "Nasi Kandar Nasmeer", "location": "Borealis", "diet": "Halal", "votes": 0, "lat": 5.336, "lon": 100.445},
+    {"name": "Taiwan Palace", "location": "Borealis", "diet": "Non-Halal", "votes": 0, "lat": 5.337, "lon": 100.446},
+    {"name": "Korean BBQ", "location": "Borealis", "diet": "Non-Halal", "votes": 0, "lat": 5.338, "lon": 100.447},
+    {"name": "Sushi Ya", "location": "Borealis", "diet": "Halal", "votes": 0, "lat": 5.339, "lon": 100.448},
+    {"name": "Nasi Kandar Ali Khan", "location": "Borealis", "diet": "Halal", "votes": 0, "lat": 5.340, "lon": 100.449},
+    {"name": "Secret Recipe", "location": "Borealis", "diet": "Halal", "votes": 0, "lat": 5.341, "lon": 100.450},
+    {"name": "Nasi Lemak Ketua Kampung", "location": "Borealis", "diet": "Halal", "votes": 0, "lat": 5.342, "lon": 100.451},
+    {"name": "Dragon Noodles", "location": "Borealis", "diet": "Non-Halal", "votes": 0, "lat": 5.343, "lon": 100.452},
+    {"name": "Inside Scoop", "location": "Borealis", "diet": "Desert", "votes": 0, "lat": 5.344, "lon": 100.453},
+    {"name": "Burger King", "location": "Design Village", "diet": "Any", "votes": 0, "lat": 5.350, "lon": 100.460},
+    {"name": "Padi House", "location": "Design Village", "diet": "Any", "votes": 0, "lat": 5.351, "lon": 100.461},
+    {"name": "Design Village Food Court", "location": "Design Village", "diet": "Any", "votes": 0, "lat": 5.352, "lon": 100.462},
+    {"name": "Thai Tuk Tuk", "location": "Utropolis", "diet": "Non-Halal", "votes": 0, "lat": 5.360, "lon": 100.470},
+    {"name": "The Ship Chinese Food", "location": "Batu Kawan", "diet": "Halal", "votes": 0, "lat": 5.370, "lon": 100.480},
+    {"name": "Subway", "location": "Batu Kawan", "diet": "Gluten-Free", "votes": 0, "lat": 5.371, "lon": 100.481}
 ]
 
 # --- Load and Save JSON ---
@@ -54,18 +56,25 @@ st.sidebar.header("➕ Add Lunch Option")
 name = st.sidebar.text_input("Restaurant Name")
 location = st.sidebar.text_input("Location")
 diet = st.sidebar.selectbox("Dietary Preference", ["Any", "Halal", "Non-Halal", "Vegetarian", "Vegan", "Gluten-Free"])
+lat = st.sidebar.text_input("Latitude")
+lon = st.sidebar.text_input("Longitude")
 
 if st.sidebar.button("Add Option"):
-    if name and location:
-        new_option = {"name": name, "location": location, "diet": diet, "votes": 0}
-        if not any(opt["name"].lower() == name.lower() for opt in st.session_state.lunch_options):
-            st.session_state.lunch_options.append(new_option)
-            save_data(OPTIONS_FILE, st.session_state.lunch_options)
-            st.sidebar.success(f"Added {name} to lunch options.")
-        else:
-            st.sidebar.warning(f"{name} is already in the list.")
+    if name and location and lat and lon:
+        try:
+            lat_val = float(lat)
+            lon_val = float(lon)
+            new_option = {"name": name, "location": location, "diet": diet, "votes": 0, "lat": lat_val, "lon": lon_val}
+            if not any(opt["name"].lower() == name.lower() for opt in st.session_state.lunch_options):
+                st.session_state.lunch_options.append(new_option)
+                save_data(OPTIONS_FILE, st.session_state.lunch_options)
+                st.sidebar.success(f"Added {name} to lunch options.")
+            else:
+                st.sidebar.warning(f"{name} is already in the list.")
+        except ValueError:
+            st.sidebar.error("Latitude and Longitude must be valid numbers.")
     else:
-        st.sidebar.error("Please enter both name and location.")
+        st.sidebar.error("Please enter all fields including coordinates.")
 
 # --- Admin Panel ---
 st.sidebar.header("🔐 Admin Panel")
@@ -125,9 +134,7 @@ with main_col:
     for record in reversed(st.session_state.lunch_record):
         st.write(f"{record['date']}: {record['place']}")
 
-    # --- Voting Section with Filters ---
     st.subheader("📊 Vote for Your Favorite")
-
     vote_location = st.selectbox("Filter by Location (Voting)", ["Any"] + sorted(set(opt["location"] for opt in st.session_state.lunch_options)))
     vote_diet = st.selectbox("Filter by Dietary Preference (Voting)", ["Any"] + sorted(set(opt["diet"] for opt in st.session_state.lunch_options)))
 
@@ -158,7 +165,7 @@ with main_col:
     for opt in st.session_state.lunch_options:
         st.write(f"{opt['name']} ({opt['location']}, {opt['diet']}) - Votes: {opt['votes']}")
 
-# --- Smart Suggestion Box ---
+# --- Suggestion Column ---
 with suggestion_col:
     st.markdown("""<p style='font-size:24px; font-weight:bold; margin-bottom:0;'>🤔 Today's Suggestion</p><p style='font-size:14px; margin-top: 0;'>You Vote la, then see how</p>""", unsafe_allow_html=True)
     if st.session_state.lunch_options:
@@ -166,6 +173,21 @@ with suggestion_col:
         sorted_options = sorted(st.session_state.lunch_options, key=lambda x: scores.get(x['name'], 0), reverse=True)
         top_pick = sorted_options[0]
         st.success(f"Today's Top Pick: {top_pick['name']} ({top_pick['location']}, {top_pick['diet']})")
+
+        st.markdown("### 🗺️ Lunch Spot Locations")
+        map_data = pd.DataFrame([
+            {"lat": opt["lat"], "lon": opt["lon"]}
+            for opt in st.session_state.lunch_options if "lat" in opt and "lon" in opt
+        ])
+        st.map(map_data)
+
+        st.markdown("### 📊 Voting Trends")
+        df_votes = pd.DataFrame(st.session_state.lunch_options)
+        chart = alt.Chart(df_votes).mark_bar().encode(
+            x=alt.X('name', sort='-y', title='Restaurant'),
+            y=alt.Y('votes', title='Votes'),
+            color='diet'
+        ).properties(width=300, height=300)
+        st.altair_chart(chart, use_container_width=True)
     else:
         st.info("Add lunch options to get smart suggestions.")
-
