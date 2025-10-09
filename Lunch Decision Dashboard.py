@@ -4,7 +4,7 @@ import datetime
 import json
 import os
 import pandas as pd
-import altair as alt  # ✅ Altair import for charting
+import altair as alt
 
 # --- File paths ---
 OPTIONS_FILE = "lunch_options.json"
@@ -17,7 +17,7 @@ default_options = [
     {"name": "Korean BBQ", "location": "Borealis", "diet": "Non-Halal", "votes": 0, "lat": 5.338, "lon": 100.447},
     {"name": "Sushi Ya", "location": "Borealis", "diet": "Halal", "votes": 0, "lat": 5.339, "lon": 100.448},
     {"name": "Burger King", "location": "Design Village", "diet": "Any", "votes": 0, "lat": 5.350, "lon": 100.460},
-    {"name": "Subway", "location": "Batu Kawan", "diet": "Gluten-Free", "votes": 0, "lat": 5.370, "lon": 100.480}
+    {"name": "Subway", "location": "Batu Kawan", "diet": "Gluten-Free", "votes": 0, "lat": 5.2189, "lon": 100.4491}
 ]
 
 # --- Load and Save JSON ---
@@ -105,10 +105,10 @@ with main_col:
             st.session_state.suggested_spot = suggestion
             st.markdown(
                 f"""
-                <div style="padding: 13px; background-color: #e6f7ff; border-radius: 10px; border: 2px solid #1890ff;">
-                    <h3 style="color: #1890ff;">
-                    🎲 <strong>{suggestion['name']}</strong>  |  Location: {suggestion['location']}  |  Diet: {suggestion['diet']}
-                    </h3>
+                <div style="padding: 10px; background-color: #e6f7ff; border-radius: 8px; border: 1px solid #1890ff;">
+                    <p style="margin: 0; font-size: 16px;">
+                    🎯 <strong>{suggestion['name']}</strong> | 📍 Location: {suggestion['location']} | 🥗 Diet: {suggestion['diet']}
+                    </p>
                 </div>
                 """,
                 unsafe_allow_html=True
@@ -188,6 +188,21 @@ with suggestion_col:
             color='diet'
         ).properties(width=300, height=300)
         st.altair_chart(chart, use_container_width=True)
-    else:
-        st.info("Add lunch options to get smart suggestions.")
 
+        st.markdown("### ⚡ Quick Actions")
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            if st.button("🔁 Suggest Again"):
+                if filtered_options:
+                    suggestion = random.choice(filtered_options)
+                    st.session_state.suggested_spot = suggestion
+                    st.experimental_rerun()
+        with col2:
+            st.button("📌 Pin This Spot")
+        with col3:
+            st.button("🗺️ Nearby Options")
+
+        st.markdown("### 📈 Dashboard Stats")
+        st.metric("Total Votes", sum(opt["votes"] for opt in st.session_state.lunch_options))
+        st.metric("Lunch Records", len(st.session_state.lunch_record))
+    else:
