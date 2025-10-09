@@ -4,7 +4,7 @@ import datetime
 import json
 import os
 import pandas as pd
-import altair as alt
+import altair as alt  # ✅ Altair import for charting
 
 # --- File paths ---
 OPTIONS_FILE = "lunch_options.json"
@@ -17,7 +17,7 @@ default_options = [
     {"name": "Korean BBQ", "location": "Borealis", "diet": "Non-Halal", "votes": 0, "lat": 5.338, "lon": 100.447},
     {"name": "Sushi Ya", "location": "Borealis", "diet": "Halal", "votes": 0, "lat": 5.339, "lon": 100.448},
     {"name": "Burger King", "location": "Design Village", "diet": "Any", "votes": 0, "lat": 5.350, "lon": 100.460},
-    {"name": "Subway", "location": "Batu Kawan", "diet": "Gluten-Free", "votes": 0, "lat": 5.371, "lon": 100.481}
+    {"name": "Subway", "location": "Batu Kawan", "diet": "Gluten-Free", "votes": 0, "lat": 5.370, "lon": 100.480}
 ]
 
 # --- Load and Save JSON ---
@@ -38,6 +38,9 @@ if "lunch_options" not in st.session_state:
 
 if "lunch_record" not in st.session_state:
     st.session_state.lunch_record = load_data(RECORD_FILE, [])
+
+if "suggested_spot" not in st.session_state:
+    st.session_state.suggested_spot = None
 
 # --- Title ---
 st.title("🍽️ Lunch Decision Dashboard")
@@ -99,6 +102,7 @@ with main_col:
     if st.button("🎲 Suggest Lunch Spot"):
         if filtered_options:
             suggestion = random.choice(filtered_options)
+            st.session_state.suggested_spot = suggestion
             st.markdown(
                 f"""
                 <div style="padding: 13px; background-color: #e6f7ff; border-radius: 10px; border: 2px solid #1890ff;">
@@ -165,20 +169,16 @@ with suggestion_col:
         top_pick = sorted_options[0]
         st.success(f"Today's Top Pick: {top_pick['name']} ({top_pick['location']}, {top_pick['diet']})")
 
-        st.markdown("### 🗺️ Lunch Spot Locations (Filtered)")
-        map_filtered_data = pd.DataFrame([
-            {"lat": opt["lat"], "lon": opt["lon"]}
-            for opt in filtered_options if "lat" in opt and "lon" in opt
-        ])
-        if not map_filtered_data.empty:
-            st.map(map_filtered_data)
+        st.markdown("### 🗺️ Lunch Spot Location")
+        if st.session_state.suggested_spot:
+            map_data = pd.DataFrame([{
+                "lat": st.session_state.suggested_spot["lat"],
+                "lon": st.session_state.suggested_spot["lon"]
+            }])
+            st.map(map_data)
         else:
-            st.info("No matching locations to display on the map.")
-
-        st.markdown("### 📍 Today's Lunch Location")
-        selected_spot = next((opt for opt in st.session_state.lunch_options if opt["name"] == selected_place), None)
-        if selected_spot and "lat" in selected_spot and "lon" in selected_spot:
-            st.map(pd.DataFrame([{"lat": selected_spot["lat"], "lon": selected_spot["lon"]}]))
+            default_map_data = pd.DataFrame([{"lat": 5.370, "lon": 100.480}])  # Batu Kawan default
+            st.map(default_map_data)
 
         st.markdown("### 📊 Voting Trends")
         df_votes = pd.DataFrame(st.session_state.lunch_options)
