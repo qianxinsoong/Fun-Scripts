@@ -123,18 +123,18 @@ with main_col:
         st.write(f"{record['date']}: {record['place']}")
 
     st.subheader("📊 Vote for Your Favorite")
-    vote_location = st.selectbox("Filter by Location (Voting)", ["Any"] + sorted(set(opt["location"] for opt in st.session_state.lunch_options)))
-    vote_diet = st.selectbox("Filter by Dietary Preference (Voting)", sorted(set(opt["diet"] for opt in st.session_state.lunch_options)))
-    vote_theme = st.selectbox("Filter by Theme (Voting)", ["Any"] + sorted(set(opt["theme"] for opt in st.session_state.lunch_options)))
+vote_location = st.selectbox("Filter by Location (Voting)", ["Any"] + sorted(set(opt["location"] for opt in st.session_state.lunch_options)))
+vote_diet = st.selectbox("Filter by Dietary Preference (Voting)", sorted(set(opt["diet"] for opt in st.session_state.lunch_options)))
+vote_theme = st.selectbox("Filter by Theme (Voting)", ["Any"] + sorted(set(opt["theme"] for opt in st.session_state.lunch_options)))
 
-    vote_filtered_options = [
-        opt for opt in st.session_state.lunch_options
-        if (vote_location == "Any" or opt["location"] == vote_location) and
-           (vote_diet == "Any" or opt["diet"] == vote_diet) and
-           (vote_theme == "Any" or opt["theme"] == vote_theme)
-    ]
+vote_filtered_options = [
+    opt for opt in st.session_state.lunch_options
+    if (vote_location == "Any" or opt["location"] == vote_location) and
+       (vote_diet == "Any" or opt["diet"] == vote_diet) and
+       (vote_theme == "Any" or opt["theme"] == vote_theme)
+]
 
-    for i, opt in enumerate(vote_filtered_options):
+for i, opt in enumerate(vote_filtered_options):
     with st.expander(f"👍 Vote for {opt['name']}"):
         st.markdown(
             f"""
@@ -148,7 +148,7 @@ with main_col:
             opt["votes"] += 1
             save_data(OPTIONS_FILE, st.session_state.lunch_options)
             st.success(f"Thanks for voting for {opt['name']}!")
-
+            
     st.subheader("📋 Current Lunch Options")
     for opt in st.session_state.lunch_options:
         st.write(f"{opt['name']} ({opt['location']}, {opt['diet']}, {opt['theme']}) - Votes: {opt['votes']}")
