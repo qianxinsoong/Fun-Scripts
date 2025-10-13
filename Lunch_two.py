@@ -34,7 +34,7 @@ if "suggested_spot" not in st.session_state:
 
 # --- Title ---
 st.title("🍽️ Lunch Decision Dashboard")
-st.markdown("""<style>h3{font-size: 18px !important;}.small-text {font-size:14px!important;}</style>""", unsafe_allow_html=True)
+st.markdown("""<style>h3{font-size:18px!important;}.small-text {font-size:16px!important;}</style>""", unsafe_allow_html=True)
 
 # --- Sidebar: Add new lunch option ---
 st.sidebar.header("➕ Add Lunch Option")
