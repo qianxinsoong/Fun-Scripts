@@ -12,7 +12,7 @@
         "name": "Pan Pan Restaurant",
         "location": "Vervea",
         "diet": "Halal",
-        "theme": "Asian, Other",
+        "theme": "Asian",
         "votes": 0,
         "lat": 5.2646,
         "lon": 100.4376
@@ -354,13 +354,13 @@
         "name": "Asian Houze",
         "location": "Utropolis",
         "diet": "Any",
-        "theme": "Asian, Other",
+        "theme": "Asian",
         "votes": 0,
         "lat": 5.2404,
         "lon": 100.4383
     },
     {
-        "name": "OoriDoori Utropolis",
+        "name": "Oori Doori Utropolis",
         "location": "Utropolis",
         "diet": "Halal",
         "theme": "Other",
@@ -372,7 +372,7 @@
         "name": "JY Kopitiam",
         "location": "Utropolis",
         "diet": "Non-Halal",
-        "theme": "Other",
+        "theme": "Asean",
         "votes": 0,
         "lat": 5.2404,
         "lon": 100.4383
@@ -381,7 +381,7 @@
         "name": "Lang Hiam Kopitiam",
         "location": "Utropolis",
         "diet": "Non-Halal",
-        "theme": "Other",
+        "theme": "Asean",
         "votes": 0,
         "lat": 5.2404,
         "lon": 100.4383
@@ -390,7 +390,7 @@
         "name": "Kobab Korea Bbq",
         "location": "Utropolis",
         "diet": "Non-Halal",
-        "theme": "Other",
+        "theme": "Korean",
         "votes": 0,
         "lat": 5.2404,
         "lon": 100.4383
@@ -408,7 +408,7 @@
         "name": "Mulam Hongkong Economy Canteen",
         "location": "Utropolis",
         "diet": "Non-Halal",
-        "theme": "Other",
+        "theme": "Asean",
         "votes": 0,
         "lat": 5.2404,
         "lon": 100.4383
@@ -462,7 +462,7 @@
         "name": "Makan Nasi",
         "location": "Utropolis",
         "diet": "Halal",
-        "theme": "Other",
+        "theme": "Asean",
         "votes": 0,
         "lat": 5.2404,
         "lon": 100.4383
@@ -579,7 +579,7 @@
         "name": "Taiwanese Palace",
         "location": "Borealis",
         "diet": "Non-Halal",
-        "theme": "Other",
+        "theme": "Asean",
         "votes": 0,
         "lat": 5.265,
         "lon": 100.44
@@ -597,7 +597,7 @@
         "name": "Dotori Restaurant",
         "location": "Borealis",
         "diet": "Non-Halal",
-        "theme": "Other",
+        "theme": "Asean",
         "votes": 0,
         "lat": 5.265,
         "lon": 100.44
@@ -705,7 +705,7 @@
         "name": "IKEA",
         "location": "IKEA Area",
         "diet": "Halal",
-        "theme": "Other",
+        "theme": "Western",
         "votes": 0,
         "lat": 5.24,
         "lon": 100.44
@@ -732,7 +732,7 @@
         "name": "The Coffee Bean & Tea Leaf",
         "location": "IKEA Area",
         "diet": "Halal",
-        "theme": "Cafe, Western",
+        "theme": "Cafe",
         "votes": 0,
         "lat": 5.24,
         "lon": 100.44
@@ -759,7 +759,7 @@
         "name": "Kenny Rogers",
         "location": "IKEA Area",
         "diet": "Halal",
-        "theme": "Other, Western",
+        "theme": "Western",
         "votes": 0,
         "lat": 5.24,
         "lon": 100.44
@@ -768,7 +768,7 @@
         "name": "TeaLive",
         "location": "IKEA Area",
         "diet": "Halal",
-        "theme": "Other",
+        "theme": "Cafe",
         "votes": 0,
         "lat": 5.24,
         "lon": 100.44
@@ -777,7 +777,7 @@
         "name": "A&W",
         "location": "IKEA Area",
         "diet": "Halal",
-        "theme": "Fast Food, Other",
+        "theme": "Fast Food",
         "votes": 0,
         "lat": 5.24,
         "lon": 100.44
@@ -849,7 +849,7 @@
         "name": "Sheng Ji Curry Seafood",
         "location": "Bukit Tambun",
         "diet": "Non-Halal",
-        "theme": "Other",
+        "theme": "Seafood",
         "votes": 0,
         "lat": 5.274927,
         "lon": 100.443793
