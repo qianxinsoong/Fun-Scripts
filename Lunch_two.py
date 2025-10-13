@@ -101,7 +101,19 @@ default_options = [
     {"name": "A&W", "location": "IKEA Area", "diet": "Halal", "theme": "Fast Food, American", "votes": 0, "lat": 5.24, "lon": 100.44}
 ]
 
-# --- Helper functions for HTML rendering ---
+# --- Load and Save JSON ---
+def load_data(file_path, default_data):
+    if os.path.exists(file_path):
+        with open(file_path, "r") as f:
+            return json.load(f)
+    else:
+        return default_data
+
+def save_data(file_path, data):
+    with open(file_path, "w") as f:
+        json.dump(data, f, indent=2)
+
+# --- HTML Rendering ---
 def render_suggestion_card(suggestion):
     return f"""
     <div style="padding: 10px; background-color: #e6f7ff; border-radius: 8px; border: 1px solid #1890ff;">
@@ -119,18 +131,6 @@ def render_vote_card(option):
         <span style="font-size: 14px;">Votes: {option['votes']}</span>
     </div>
     """
-
-# --- Load and Save JSON ---
-def load_data(file_path, default_data):
-    if os.path.exists(file_path):
-        with open(file_path, "r") as f:
-            return json.load(f)
-    else:
-        return default_data
-
-def save_data(file_path, data):
-    with open(file_path, "w") as f:
-        json.dump(data, f, indent=2)
 
 # --- Initialize session state ---
 if "lunch_options" not in st.session_state:
@@ -219,6 +219,10 @@ with main_col:
         save_data(RECORD_FILE, st.session_state.lunch_record)
         st.success(f"Recorded: {selected_place} on {today}")
 
+    if st.button("📤 Export Lunch Records"):
+        df_record = pd.DataFrame(st.session_state.lunch_record)
+        st.download_button("Download CSV", df_record.to_csv(index=False), "lunch_records.csv", "text/csv")
+
     st.markdown("### 📆 Past Lunch Records")
     for record in reversed(st.session_state.lunch_record):
         st.write(f"{record['date']}: {record['place']}")
@@ -234,6 +238,7 @@ with main_col:
            (vote_diet == "Any" or opt["diet"] == vote_diet) and
            (not vote_theme or opt.get("theme", "N/A") in vote_theme)
     ]
+    vote_filtered_options = sorted(vote_filtered_options, key=lambda x: x["votes"], reverse=True)
 
     for i, opt in enumerate(vote_filtered_options):
         with st.container():
@@ -258,11 +263,18 @@ with suggestion_col:
 
         st.markdown("### 🗺️ Lunch Spot Location")
         if st.session_state.suggested_spot and "lat" in st.session_state.suggested_spot and "lon" in st.session_state.suggested_spot:
-            map_data = pd.DataFrame([{"lat": opt["lat"], "lon": opt["lon"]} for opt in filtered_options])
+            map_data = pd.DataFrame([{
+                "lat": st.session_state.suggested_spot["lat"],
+                "lon": st.session_state.suggested_spot["lon"]
+            }])
             st.map(map_data)
         else:
-            default_map_data = pd.DataFrame([{"lat": 5.2189, "lon": 100.4491}])  # Default location
+            default_map_data = pd.DataFrame([{"lat": 5.2189, "lon": 100.4491}])
             st.map(default_map_data)
+
+        # Optional: Show all filtered options on map
+        # map_data = pd.DataFrame([{"lat": opt["lat"], "lon": opt["lon"]} for opt in filtered_options])
+        # st.map(map_data)
 
         st.markdown("### 📊 Voting Trends")
         df_votes = pd.DataFrame(st.session_state.lunch_options)
