@@ -111,7 +111,7 @@ with main_col:
 
     st.subheader("🍴 Today's Lunch Record")
     today = datetime.date.today().strftime("%Y-%m-%d")
-    selected_place = st.selectbox("Where did you go for lunch today?", [opt["name"] for opt in st.session_state.lunch_options])
+    selected_place = st.selectbox("Where did you go for lunch today?", options=[opt["name"] for opt in st.session_state.lunch_options], index=0, placeholder="Type or select a restaurant...")
     if st.button("📍 Record Today's Lunch"):
         record_entry = {"date": today, "place": selected_place}
         st.session_state.lunch_record.append(record_entry)
