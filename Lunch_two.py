@@ -106,7 +106,7 @@ def render_suggestion_card(suggestion):
     return f"""
     <div style="padding: 10px; background-color: #e6f7ff; border-radius: 8px; border: 1px solid #1890ff;">
         <p style="margin: 0; font-size: 16px;">
-        🎯 <strong>{suggestion['name']}</strong> | 📍 Location: {suggestion['location']} | 🥗 Diet: {suggestion['diet']}
+        🎯 <strong>{suggestion['name']}</strong> | 📍 Location: {suggestion['location']} | 🥗 Diet: {suggestion['diet']} | 🍽️ Theme: {suggestion.get('theme', 'N/A')}
         </p>
     </div>
     """
@@ -115,7 +115,7 @@ def render_vote_card(option):
     return f"""
     <div style="padding: 10px; border: 1px solid #ccc; border-radius: 8px; margin-bottom: 10px;">
         <strong style="font-size: 18px;">{option['name']}</strong><br>
-        <span style="font-size: 14px;">Location: {option['location']} | Diet: {option['diet']}</span><br>
+        <span style="font-size: 14px;">Location: {option['location']} | Diet: {option['diet']} | Theme: {option.get('theme', 'N/A')}</span><br>
         <span style="font-size: 14px;">Votes: {option['votes']}</span>
     </div>
     """
@@ -134,7 +134,7 @@ def save_data(file_path, data):
 
 # --- Initialize session state ---
 if "lunch_options" not in st.session_state:
-    st.session_state.lunch_options = load_data(OPTIONS_FILE, default_options)
+    st.session_state.lunch_options = load_data(OPTIONS_FILE, [])
 
 if "lunch_record" not in st.session_state:
     st.session_state.lunch_record = load_data(RECORD_FILE, [])
@@ -150,16 +150,17 @@ st.sidebar.header("➕ Add Lunch Option")
 name = st.sidebar.text_input("Restaurant Name")
 location = st.sidebar.text_input("Location")
 diet = st.sidebar.selectbox("Dietary Preference", ["Any", "Halal", "Non-Halal", "Vegetarian", "Vegan", "Gluten-Free"])
+theme = st.sidebar.text_input("Food Theme (e.g., Japanese, Western, Cafe)")
 lat = st.sidebar.text_input("Latitude")
 lon = st.sidebar.text_input("Longitude")
 
 if st.sidebar.button("Add Option"):
-    if name and location and lat and lon:
+    if name and location and lat and lon and theme:
         try:
             lat_val = float(lat)
             lon_val = float(lon)
-            new_option = {"name": name, "location": location, "diet": diet, "votes": 0, "lat": lat_val, "lon": lon_val}
-            if not any(opt["name"].lower() == name.lower() for opt in st.session_state.lunch_options):
+            new_option = {"name": name, "location": location, "diet": diet, "theme": theme, "votes": 0, "lat": lat_val, "lon": lon_val}
+            if not any(opt["name"].lower() == name.lower() and opt["location"].lower() == location.lower() for opt in st.session_state.lunch_options):
                 st.session_state.lunch_options.append(new_option)
                 save_data(OPTIONS_FILE, st.session_state.lunch_options)
                 st.sidebar.success(f"Added {name} to lunch options.")
@@ -168,7 +169,7 @@ if st.sidebar.button("Add Option"):
         except ValueError:
             st.sidebar.error("Latitude and Longitude must be valid numbers.")
     else:
-        st.sidebar.error("Please enter all fields including coordinates.")
+        st.sidebar.error("Please enter all fields including coordinates and theme.")
 
 # --- Admin Panel ---
 st.sidebar.header("🔐 Admin Panel")
@@ -190,13 +191,15 @@ main_col, suggestion_col = st.columns([3, 2])
 # --- Main Column ---
 with main_col:
     st.subheader("🔍 Filter & Suggest Lunch Spot")
-    filter_location = st.selectbox("Filter by Location", ["Any"] + list(set([opt["location"] for opt in st.session_state.lunch_options])))
-    filter_diet = st.selectbox("Filter by Dietary Preference", ["Any", "Halal", "Non-Halal", "Vegetarian", "Vegan", "Gluten-Free"])
+    filter_location = st.selectbox("Filter by Location", ["Any"] + sorted(set(opt["location"] for opt in st.session_state.lunch_options)))
+    filter_diet = st.selectbox("Filter by Dietary Preference", ["Any"] + sorted(set(opt["diet"] for opt in st.session_state.lunch_options)))
+    filter_theme = st.multiselect("Filter by Food Theme", sorted(set(opt.get("theme", "N/A") for opt in st.session_state.lunch_options)))
 
     filtered_options = [
         opt for opt in st.session_state.lunch_options
         if (filter_location == "Any" or opt["location"] == filter_location) and
-           (filter_diet == "Any" or opt["diet"] == filter_diet)
+           (filter_diet == "Any" or opt["diet"] == filter_diet) and
+           (not filter_theme or opt.get("theme", "N/A") in filter_theme)
     ]
 
     if st.button("🎲 Suggest Lunch Spot"):
@@ -222,12 +225,14 @@ with main_col:
 
     st.subheader("📊 Vote for Your Favorite")
     vote_location = st.selectbox("Filter by Location (Voting)", ["Any"] + sorted(set(opt["location"] for opt in st.session_state.lunch_options)))
-    vote_diet = st.selectbox("Filter by Dietary Preference (Voting)", sorted(set(opt["diet"] for opt in st.session_state.lunch_options)))
+    vote_diet = st.selectbox("Filter by Dietary Preference (Voting)", ["Any"] + sorted(set(opt["diet"] for opt in st.session_state.lunch_options)))
+    vote_theme = st.multiselect("Filter by Food Theme (Voting)", sorted(set(opt.get("theme", "N/A") for opt in st.session_state.lunch_options)))
 
     vote_filtered_options = [
         opt for opt in st.session_state.lunch_options
         if (vote_location == "Any" or opt["location"] == vote_location) and
-           (vote_diet == "Any" or opt["diet"] == vote_diet)
+           (vote_diet == "Any" or opt["diet"] == vote_diet) and
+           (not vote_theme or opt.get("theme", "N/A") in vote_theme)
     ]
 
     for i, opt in enumerate(vote_filtered_options):
@@ -240,7 +245,7 @@ with main_col:
 
     st.subheader("📋 Current Lunch Options")
     for opt in st.session_state.lunch_options:
-        st.write(f"{opt['name']} ({opt['location']}, {opt['diet']}) - Votes: {opt['votes']}")
+        st.write(f"{opt['name']} ({opt['location']}, {opt['diet']}, {opt.get('theme', 'N/A')}) - Votes: {opt['votes']}")
 
 # --- Suggestion Column ---
 with suggestion_col:
@@ -249,7 +254,7 @@ with suggestion_col:
         scores = {opt['name']: opt['votes'] for opt in st.session_state.lunch_options}
         sorted_options = sorted(st.session_state.lunch_options, key=lambda x: scores.get(x['name'], 0), reverse=True)
         top_pick = sorted_options[0]
-        st.success(f"Today's Top Pick: {top_pick['name']} ({top_pick['location']}, {top_pick['diet']})")
+        st.success(f"Today's Top Pick: {top_pick['name']} ({top_pick['location']}, {top_pick['diet']}, {top_pick.get('theme', 'N/A')})")
 
         st.markdown("### 🗺️ Lunch Spot Location")
         if st.session_state.suggested_spot and "lat" in st.session_state.suggested_spot and "lon" in st.session_state.suggested_spot:
@@ -259,15 +264,17 @@ with suggestion_col:
             }])
             st.map(map_data)
         else:
-            default_map_data = pd.DataFrame([{"lat": 5.2189, "lon": 100.4491}])  # Batu Kawan default
+            default_map_data = pd.DataFrame([{"lat": 5.2189, "lon": 100.4491}])  # Default location
             st.map(default_map_data)
 
         st.markdown("### 📊 Voting Trends")
         df_votes = pd.DataFrame(st.session_state.lunch_options)
+        if "theme" not in df_votes.columns:
+            df_votes["theme"] = "N/A"
         chart = alt.Chart(df_votes).mark_bar().encode(
             x=alt.X('name', sort='-y', title='Restaurant'),
             y=alt.Y('votes', title='Votes'),
-            color='diet'
+            color='theme'
         ).properties(width=300, height=300)
         st.altair_chart(chart, use_container_width=True)
 
