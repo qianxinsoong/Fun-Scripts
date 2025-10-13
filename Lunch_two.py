@@ -157,24 +157,27 @@ with main_col:
 
 # --- Suggestion Column ---
 with suggestion_col:
-    st.markdown("<h3>🤔 Today's Suggestion</h3><p>You Vote la, then see how</p>", unsafe_allow_html=True)
     if st.session_state.lunch_options:
         scores = {opt['name']: opt['votes'] for opt in st.session_state.lunch_options}
         sorted_options = sorted(st.session_state.lunch_options, key=lambda x: scores.get(x['name'], 0), reverse=True)
         top_pick = sorted_options[0]
-        st.success(f"Today's Top Pick: {top_pick['name']} ({top_pick['location']}, {top_pick['diet']}, {top_pick['theme']})")
+        colA, colB = st.columns([1, 4])
+        with colA:
+            st.markdown("#### 🤔 Today's Suggestion")
+        with colB:
+            st.success(f"{top_pick['name']} ({top_pick['location']}, {top_pick['diet']}, {top_pick['theme']})")
 
-        st.markdown("### 🗺️ Lunch Spot Location")
-        if st.session_state.suggested_spot and "lat" in st.session_state.suggested_spot and "lon" in st.session_state.suggested_spot:
-            map_data = pd.DataFrame([{
-                "lat": st.session_state.suggested_spot["lat"],
-                "lon": st.session_state.suggested_spot["lon"]
-            }])
-            st.map(map_data)
-        else:
-            default_map_data = pd.DataFrame([{"lat": 5.2189, "lon": 100.4491}])  # Batu Kawan default
-            st.map(default_map_data)
-
+        colC, colD = st.columns([1, 4])
+        with colC:
+            st.markdown("#### 🗺️ Lunch Spot Location")
+        with colD:
+            if st.session_state.suggested_spot and "lat" in st.session_state.suggested_spot and "lon" in st.session_state.suggested_spot:
+                map_data = pd.DataFrame([{"lat": st.session_state.suggested_spot["lat"], "lon": st.session_state.suggested_spot["lon"]}])
+        st.map(map_data)
+    else:
+        default_map_data = pd.DataFrame([{"lat": 5.2189, "lon": 100.4491}])  # Batu Kawan default
+        st.map(default_map_data)
+        
         st.markdown("### 📊 Voting Trends")
         df_votes = pd.DataFrame(st.session_state.lunch_options)
         chart = alt.Chart(df_votes).mark_bar().encode(
