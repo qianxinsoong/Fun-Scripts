@@ -82,7 +82,7 @@ main_col, suggestion_col = st.columns([3, 2])
 with main_col:
     st.subheader("🔍 Filter & Suggest Lunch Spot")
     filter_location = st.selectbox("Filter by Location", ["Any"] + sorted(set(opt["location"] for opt in st.session_state.lunch_options)))
-    filter_diet = st.selectbox("Filter by Dietary Preference", ["Any"] + sorted(set(opt["diet"] for opt in st.session_state.lunch_options)))
+    filter_diet = st.selectbox("Filter by Dietary Preference", sorted(set(opt["diet"] for opt in st.session_state.lunch_options)))
     filter_theme = st.selectbox("Filter by Theme", ["Any"] + sorted(set(opt["theme"] for opt in st.session_state.lunch_options)))
 
     filtered_options = [
@@ -124,7 +124,7 @@ with main_col:
 
     st.subheader("📊 Vote for Your Favorite")
     vote_location = st.selectbox("Filter by Location (Voting)", ["Any"] + sorted(set(opt["location"] for opt in st.session_state.lunch_options)))
-    vote_diet = st.selectbox("Filter by Dietary Preference (Voting)", ["Any"] + sorted(set(opt["diet"] for opt in st.session_state.lunch_options)))
+    vote_diet = st.selectbox("Filter by Dietary Preference (Voting)", sorted(set(opt["diet"] for opt in st.session_state.lunch_options)))
     vote_theme = st.selectbox("Filter by Theme (Voting)", ["Any"] + sorted(set(opt["theme"] for opt in st.session_state.lunch_options)))
 
     vote_filtered_options = [
