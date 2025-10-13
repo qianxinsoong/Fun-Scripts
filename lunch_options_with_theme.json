@@ -372,7 +372,7 @@
         "name": "JY Kopitiam",
         "location": "Utropolis",
         "diet": "Non-Halal",
-        "theme": "Asean",
+        "theme": "Asan",
         "votes": 0,
         "lat": 5.2404,
         "lon": 100.4383
@@ -381,7 +381,7 @@
         "name": "Lang Hiam Kopitiam",
         "location": "Utropolis",
         "diet": "Non-Halal",
-        "theme": "Asean",
+        "theme": "Asian",
         "votes": 0,
         "lat": 5.2404,
         "lon": 100.4383
@@ -408,7 +408,7 @@
         "name": "Mulam Hongkong Economy Canteen",
         "location": "Utropolis",
         "diet": "Non-Halal",
-        "theme": "Asean",
+        "theme": "Asian",
         "votes": 0,
         "lat": 5.2404,
         "lon": 100.4383
@@ -462,7 +462,7 @@
         "name": "Makan Nasi",
         "location": "Utropolis",
         "diet": "Halal",
-        "theme": "Asean",
+        "theme": "Asian",
         "votes": 0,
         "lat": 5.2404,
         "lon": 100.4383
@@ -579,7 +579,7 @@
         "name": "Taiwanese Palace",
         "location": "Borealis",
         "diet": "Non-Halal",
-        "theme": "Asean",
+        "theme": "Asian",
         "votes": 0,
         "lat": 5.265,
         "lon": 100.44
@@ -597,7 +597,7 @@
         "name": "Dotori Restaurant",
         "location": "Borealis",
         "diet": "Non-Halal",
-        "theme": "Asean",
+        "theme": "Asian",
         "votes": 0,
         "lat": 5.265,
         "lon": 100.44
