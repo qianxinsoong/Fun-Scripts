@@ -12,7 +12,7 @@ RECORD_FILE = "lunch_record.json"
 
 # --- Default lunch options (shortened for brevity) ---
 default_options = [
-    {"name": "Meetcha Cafe & Eatery", "location": "Vervea", "diet": "Any", "votes": 0, "lat": 5.2645, "lon": 100.4375},
+    {"name": "Meetcha Cafe & Eatery", "location": "Vervea", "diet": "Any", "theme": "Fusion (Local & Western)", "votes": 0, "lat": 5.2645, "lon": 100.4375},
     {"name": "Pan Pan Restaurant", "location": "Vervea", "diet": "Halal", "votes": 0, "lat": 5.2646, "lon": 100.4376},
     {"name": "Temp Cafe", "location": "Vervea", "diet": "Halal", "votes": 0, "lat": 5.2647, "lon": 100.4377},
     {"name": "Shunka Japanese Restaurant", "location": "Vervea", "diet": "Non-Halal", "votes": 0, "lat": 5.2645, "lon": 100.4375},
@@ -150,7 +150,7 @@ st.sidebar.header("➕ Add Lunch Option")
 name = st.sidebar.text_input("Restaurant Name")
 location = st.sidebar.text_input("Location")
 diet = st.sidebar.selectbox("Dietary Preference", ["Any", "Halal", "Non-Halal", "Vegetarian", "Vegan", "Gluten-Free"])
-theme = st.sidebar.text_input("Food Theme (e.g., Japanese, Western, Cafe)")
+theme = st.sidebar.text_input("Food Theme")
 lat = st.sidebar.text_input("Latitude")
 lon = st.sidebar.text_input("Longitude")
 
@@ -193,7 +193,7 @@ with main_col:
     st.subheader("🔍 Filter & Suggest Lunch Spot")
     filter_location = st.selectbox("Filter by Location", ["Any"] + sorted(set(opt["location"] for opt in st.session_state.lunch_options)))
     filter_diet = st.selectbox("Filter by Dietary Preference", ["Any"] + sorted(set(opt["diet"] for opt in st.session_state.lunch_options)))
-    filter_theme = st.multiselect("Filter by Food Theme", sorted(set(opt.get("theme", "N/A") for opt in st.session_state.lunch_options)))
+    filter_theme = st.selectboc("Filter by Food Theme", ["Any"] + sorted(set(opt["theme"] for opt in st.session_state.lunch_options)))
 
     filtered_options = [
         opt for opt in st.session_state.lunch_options
