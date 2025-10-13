@@ -207,31 +207,3 @@ with suggestion_col:
         st.info("Add lunch options to get smart suggestions.")
         default_map_data = pd.DataFrame([{"lat": 5.2189, "lon": 100.4491}])  # Batu Kawan default
         st.map(default_map_data)
-        
-        st.markdown("### 📊 Voting Trends")
-        df_votes = pd.DataFrame(st.session_state.lunch_options)
-        chart = alt.Chart(df_votes).mark_bar().encode(
-            x=alt.X('name', sort='-y', title='Restaurant'),
-            y=alt.Y('votes', title='Votes'),
-            color='theme'
-        ).properties(width=300, height=300)
-        st.altair_chart(chart, use_container_width=True)
-
-        st.markdown("### ⚡ Quick Actions")
-        col1, col2, col3 = st.columns(3)
-        with col1:
-            if st.button("🔁 Suggest Again"):
-                if filtered_options:
-                    suggestion = random.choice(filtered_options)
-                    st.session_state.suggested_spot = suggestion
-                    st.experimental_rerun()
-        with col2:
-            st.button("📌 Pin This Spot")
-        with col3:
-            st.button("🗺️ Nearby Options")
-
-        st.markdown("### 📈 Dashboard Stats")
-        st.metric("Total Votes", sum(opt["votes"] for opt in st.session_state.lunch_options))
-        st.metric("Lunch Records", len(st.session_state.lunch_record))
-    else:
-        st.info("Add lunch options to get smart suggestions.")
