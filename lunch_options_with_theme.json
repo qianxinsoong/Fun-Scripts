@@ -781,5 +781,158 @@
     "votes": 0,
     "lat": 5.24,
     "lon": 100.44
+  },
+  {
+    "name": "Food Court Masjid Simpang Ampat",
+    "location": "Simpang Ampat",
+    "diet": "Halal",
+    "theme": "Malay",
+    "votes": 0,
+    "lat": 5.2808,
+    "lon": 100.4749
+  },
+  {
+    "name": "Nasi Kandar Pak Syed",
+    "location": "Simpang Ampat",
+    "diet": "Halal",
+    "theme": "Malay",
+    "votes": 0,
+    "lat": 5.2808,
+    "lon": 100.4749
+  },
+  {
+    "name": "US Pizza",
+    "location": "Simpang Ampat",
+    "diet": "Halal",
+    "theme": "Pizza",
+    "votes": 0,
+    "lat": 5.2808,
+    "lon": 100.4749
+  },
+  {
+    "name": "Gerai Sebelah Masjid",
+    "location": "Simpang Ampat",
+    "diet": "Halal",
+    "theme": "Malay",
+    "votes": 0,
+    "lat": 5.3108,
+    "lon": 100.44518
+  },
+  {
+    "name": "Iconic Point",
+    "location": "Simpang Ampat",
+    "diet": "Any",
+    "theme": "Any",
+    "votes": 0,
+    "lat": 5.2835,
+    "lon": 100.4763
+  },
+  {
+    "name": "Tambun Prawn Village",
+    "location": "Bukit Tambun",
+    "diet": "Any",
+    "theme": "Seafood",
+    "votes": 0,
+    "lat": 5.271215,
+    "lon": 100.443393
+  },
+  {
+    "name": "Tambun Kochabi",
+    "location": "Bukit Tambun",
+    "diet": "Non-Halal",
+    "theme": "Kopitiam",
+    "votes": 0,
+    "lat": 5.271215,
+    "lon": 100.443393
+  },
+  {
+    "name": "Sheng Ji Curry Seafood",
+    "location": "Bukit Tambun",
+    "diet": "Non-Halal",
+    "theme": "Kopitiam",
+    "votes": 0,
+    "lat": 5.274927,
+    "lon": 100.443793
+  },
+  {
+    "name": "How Kee Curry",
+    "location": "Bukit Tambun",
+    "diet": "Non-Halal",
+    "theme": "Kopitiam",
+    "votes": 0,
+    "lat": 5.272447,
+    "lon": 100.450096
+  },
+  {
+    "name": "Tambun Jade Seafood Restaurant",
+    "location": "Bukit Tambun",
+    "diet": "Any",
+    "theme": "Seafood",
+    "votes": 0,
+    "lat": 5.274357,
+    "lon": 100.451260
+  },
+  {
+    "name": "Jetty Seafood",
+    "location": "Bukit Tambun",
+    "diet": "Any",
+    "theme": "Seafood",
+    "votes": 0,
+    "lat": 5.270891,
+    "lon": 100.443310
+  },
+  {
+    "name": "Ban Liau Bukit Tambun",
+    "location": "Bukit Tambun",
+    "diet": "Any",
+    "theme": "Seafood",
+    "votes": 0,
+    "lat": 5.274611,
+    "lon": 100.444103
+  },
+  {
+    "name": "Restoran How Kee Seafood Village",
+    "location": "Bukit Tambun",
+    "diet": "Any",
+    "theme": "Seafood",
+    "votes": 0,
+    "lat": 5.272486,
+    "lon": 100.450730
+  },
+  {
+    "name": "Floating Seafood Paradise Restaurant",
+    "location": "Bukit Tambun",
+    "diet": "Any",
+    "theme": "Seafood",
+    "votes": 0,
+    "lat": 5.276261,
+    "lon": 100.445764
+  },
+  {
+    "name": "Bukit Tambun Hokkien Mee",
+    "location": "Bukit Tambun",
+    "diet": "Any",
+    "theme": "Seafood",
+    "votes": 0,
+    "lat": 5.273727,
+    "lon": 100.448954
+  },
+  {
+    "name": "Tambun Star Food Court",
+    "location": "Bukit Tambun",
+    "diet": "Any",
+    "theme": "Any",
+    "votes": 0,
+    "lat": 5.271118,
+    "lon": 100.460089
+  },
+  {
+    "name": "Unknown Cafe & Bistro Eco Series",
+    "location": "Auto City",
+    "diet": "Halal",
+    "theme": "Western",
+    "votes": 0,
+    "lat": 5.336264,
+    "lon": 100.427384
   }
 ]
