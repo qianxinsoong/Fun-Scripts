@@ -12,12 +12,93 @@ RECORD_FILE = "lunch_record.json"
 
 # --- Default lunch options with coordinates ---
 default_options = [
-    {"name": "Nasi Kandar Nasmeer", "location": "Borealis", "diet": "Halal", "votes": 0, "lat": 5.336, "lon": 100.445},
-    {"name": "Taiwan Palace", "location": "Borealis", "diet": "Non-Halal", "votes": 0, "lat": 5.337, "lon": 100.446},
-    {"name": "Korean BBQ", "location": "Borealis", "diet": "Non-Halal", "votes": 0, "lat": 5.338, "lon": 100.447},
-    {"name": "Sushi Ya", "location": "Borealis", "diet": "Halal", "votes": 0, "lat": 5.339, "lon": 100.448},
-    {"name": "Burger King", "location": "Design Village", "diet": "Any", "votes": 0, "lat": 5.350, "lon": 100.460},
-    {"name": "Subway", "location": "Batu Kawan", "diet": "Gluten-Free", "votes": 0, "lat": 5.2189, "lon": 100.4491}
+    {"name": "Meetcha Cafe & Eatery", "location": "Vervea", "diet": "Any", "votes": 0, "lat": 5.2645, "lon": 100.4375}
+    {"name": "Pan Pan Restaurant", "location": "Vervea", "diet": "Halal", "votes": 0, "lat": 5.2646, "lon": 100.4376}
+    {"name": "Temp Cafe", "location": "Vervea", "diet": "Halal", "votes": 0, "lat": 5.2647, "lon": 100.4377}
+    {"name": "Shunka Japanese Restaurant", "location": "Vervea", "diet": "Non-Halal", "votes": 0, "lat": 5.2645, "lon": 100.4375}
+    {"name": "Ren Wafu Ramen & Don", "location": "Vervea", "diet": "Non-Halal", "votes": 0, "lat": 5.2645, "lon": 100.4375}
+    {"name": "WG Wondrous Gastronomy", "location": "Vervea", "diet": "Any", "votes": 0, "lat": 5.2645, "lon": 100.4375}
+    {"name": "A Pause Restaurant", "location": "Vervea", "diet": "Any", "votes": 0, "lat": 5.2645, "lon": 100.4375}
+    {"name": "Cili Giling", "location": "Vervea", "diet": "Halal", "votes": 0, "lat": 5.2645, "lon": 100.4375}
+    {"name": "Harenee Spice House", "location": "Vervea", "diet": "Halal", "votes": 0, "lat": 5.2645, "lon": 100.4375}
+    {"name": "The Wok & Flame Restaurant", "location": "Vervea", "diet": "Halal", "votes": 0, "lat": 5.2645, "lon": 100.4375}
+    {"name": "Wen Kee Restaurant", "location": "Vervea", "diet": "Non-Halal", "votes": 0, "lat": 5.2645, "lon": 100.4375}
+    {"name": "SanTai", "location": "Vervea", "diet": "Non-Halal", "votes": 0, "lat": 5.2645, "lon": 100.4375}
+    {"name": "Five Grains Noodles", "location": "Vervea", "diet": "Halal", "votes": 0, "lat": 5.2645, "lon": 100.4375}
+    {"name": "Nasi Ayam Kawan", "location": "Vervea", "diet": "Halal", "votes": 0, "lat": 5.2645, "lon": 100.4375}
+    {"name": "AB Home & Caf\u00e9", "location": "Vervea", "diet": "Any", "votes": 0, "lat": 5.2645, "lon": 100.4375}
+    {"name": "Kopi Saigon Batu Kawan", "location": "Vervea", "diet": "Halal", "votes": 0, "lat": 5.2645, "lon": 100.4375}
+    {"name": "Nasi Lemak Datin", "location": "Vervea", "diet": "Halal", "votes": 0, "lat": 5.2645, "lon": 100.4375}
+    {"name": "Rare Brew Caf\u00e9", "location": "Vervea", "diet": "Halal", "votes": 0, "lat": 5.2645, "lon": 100.4375}
+    {"name": "Safa Matcha", "location": "Vervea", "diet": "Halal", "votes": 0, "lat": 5.2645, "lon": 100.4375}
+    {"name": "Hello! Ma La Tang", "location": "Vervea", "diet": "Non-Halal", "votes": 0, "lat": 5.2645, "lon": 100.4375}
+    {"name": "Shao Lak Restaurant", "location": "Vervea", "diet": "Non-Halal", "votes": 0, "lat": 5.2645, "lon": 100.4375}
+    {"name": "Face to Face Noodle House", "location": "Vervea", "diet": "Halal", "votes": 0, "lat": 5.2645, "lon": 100.4375}
+    {"name": "Chicken Claypot House", "location": "Vervea", "diet": "Halal", "votes": 0, "lat": 5.2645, "lon": 100.4375}
+    {"name": "SK Bhavan", "location": "Vervea", "diet": "Halal", "votes": 0, "lat": 5.2645, "lon": 100.4375}
+    {"name": "Medrich Caf\u00e9", "location": "Vervea", "diet": "Any", "votes": 0, "lat": 5.2645, "lon": 100.4375}
+    {"name": "Snacks! Bakery & Caf\u00e9", "location": "Vervea", "diet": "Any", "votes": 0, "lat": 5.2645, "lon": 100.4375}
+    {"name": "King Kong Ramen", "location": "Vervea", "diet": "Non-Halal", "votes": 0, "lat": 5.2645, "lon": 100.4375}
+    {"name": "Yusuf Restaurant", "location": "Vervea", "diet": "Halal", "votes": 0, "lat": 5.2645, "lon": 100.4375}
+    {"name": "Indian Heritage Restaurant", "location": "Vervea", "diet": "Halal", "votes": 0, "lat": 5.2645, "lon": 100.4375}
+    {"name": "Le Man Tang Restaurant", "location": "Vervea", "diet": "Non-Halal", "votes": 0, "lat": 5.2645, "lon": 100.4375}
+    {"name": "Sri Meenackshi Bhavan", "location": "Vervea", "diet": "Halal", "votes": 0, "lat": 5.2645, "lon": 100.4375}
+    {"name": "18 Garden (Uncle Kin Chili Pan Mee)", "location": "Vervea", "diet": "Halal", "votes": 0, "lat": 5.2645, "lon": 100.4375}
+    {"name": "Unggul Nasi Campur", "location": "Vervea", "diet": "Halal", "votes": 0, "lat": 5.2645, "lon": 100.4375}
+    {"name": "M&L Food House", "location": "Vervea", "diet": "Halal", "votes": 0, "lat": 5.2645, "lon": 100.4375}
+    {"name": "Dynasty Porridge", "location": "Vervea", "diet": "Non-Halal", "votes": 0, "lat": 5.2645, "lon": 100.4375}
+    {"name": "Hao Yun", "location": "Vervea", "diet": "Non-Halal", "votes": 0, "lat": 5.2645, "lon": 100.4375}
+    {"name": "James Foo Western Food", "location": "Vervea", "diet": "Any", "votes": 0, "lat": 5.2645, "lon": 100.4375}
+    {"name": "Mala Miss Me", "location": "Vervea", "diet": "Non-Halal", "votes": 0, "lat": 5.2645, "lon": 100.4375}
+    {"name": "MaoPaiHuo", "location": "Vervea", "diet": "Non-Halal", "votes": 0, "lat": 5.2645, "lon": 100.4375}
+    {"name": "Asian Houze", "location": "Utropolis", "diet": "Any", "votes": 0, "lat": 5.2404, "lon": 100.4383}
+    {"name": "OoriDoori Utropolis", "location": "Utropolis", "diet": "Halal", "votes": 0, "lat": 5.2404, "lon": 100.4383}
+    {"name": "JY Kopitiam", "location": "Utropolis", "diet": "Non-Halal", "votes": 0, "lat": 5.2404, "lon": 100.4383}
+    {"name": "Lang Hiam Kopitiam", "location": "Utropolis", "diet": "Non-Halal", "votes": 0, "lat": 5.2404, "lon": 100.4383}
+    {"name": "Kobab Korea Bbq", "location": "Utropolis", "diet": "Non-Halal", "votes": 0, "lat": 5.2404, "lon": 100.4383}
+    {"name": "CAFE ONE TWENTY 9", "location": "Utropolis", "diet": "Any", "votes": 0, "lat": 5.2404, "lon": 100.4383}
+    {"name": "Mulam Hongkong Economy Canteen", "location": "Utropolis", "diet": "Non-Halal", "votes": 0, "lat": 5.2404, "lon": 100.4383}
+    {"name": "Mala Miss Me", "location": "Utropolis", "diet": "Non-Halal", "votes": 0, "lat": 5.2404, "lon": 100.4383}
+    {"name": "Tai Jia Lam Thai Cuisine", "location": "Utropolis", "diet": "Non-Halal", "votes": 0, "lat": 5.2404, "lon": 100.4383}
+    {"name": "Last Time Coffee Shop", "location": "Utropolis", "diet": "Any", "votes": 0, "lat": 5.2404, "lon": 100.4383}
+    {"name": "James Foo Western Food", "location": "Utropolis", "diet": "Any", "votes": 0, "lat": 5.2404, "lon": 100.4383}
+    {"name": "Ideal Genki Sushi", "location": "Utropolis", "diet": "Halal", "votes": 0, "lat": 5.2404, "lon": 100.4383}
+    {"name": "Makan Nasi", "location": "Utropolis", "diet": "Halal", "votes": 0, "lat": 5.2404, "lon": 100.4383}
+    {"name": "Refresh (RF Coffee)", "location": "Utropolis", "diet": "Any", "votes": 0, "lat": 5.2404, "lon": 100.4383}
+    {"name": "Ai-CHA", "location": "Utropolis", "diet": "Any", "votes": 0, "lat": 5.2404, "lon": 100.4383}
+    {"name": "Little June Sushi", "location": "Utropolis", "diet": "Halal", "votes": 0, "lat": 5.2404, "lon": 100.4383}
+    {"name": "Ready to E.A.T", "location": "Utropolis", "diet": "Any", "votes": 0, "lat": 5.2404, "lon": 100.4383}
+    {"name": "QQ", "location": "Utropolis", "diet": "Non-Halal", "votes": 0, "lat": 5.2404, "lon": 100.4383}
+    {"name": "Thai Tuk Tuk", "location": "Utropolis", "diet": "Non-Halal", "votes": 0, "lat": 5.2404, "lon": 100.4383}
+    {"name": "Sand Wish", "location": "Borealis", "diet": "Halal", "votes": 0, "lat": 5.265, "lon": 100.44}
+    {"name": "Pitstop Borealis Cafe", "location": "Borealis", "diet": "Non-Halal", "votes": 0, "lat": 5.265, "lon": 100.44}
+    {"name": "Sushi Ya", "location": "Borealis", "diet": "Halal", "votes": 0, "lat": 5.265, "lon": 100.44}
+    {"name": "Nasi Lemak Ketua Kampung", "location": "Borealis", "diet": "Halal", "votes": 0, "lat": 5.265, "lon": 100.44}
+    {"name": "Starbucks", "location": "Borealis", "diet": "Halal", "votes": 0, "lat": 5.265, "lon": 100.44}
+    {"name": "Le Man Tang Restaurant", "location": "Borealis", "diet": "Non-Halal", "votes": 0, "lat": 5.265, "lon": 100.44}
+    {"name": "Taiwanese Palace", "location": "Borealis", "diet": "Non-Halal", "votes": 0, "lat": 5.265, "lon": 100.44}
+    {"name": "Nom Nom Eatery", "location": "Borealis", "diet": "Halal", "votes": 0, "lat": 5.265, "lon": 100.44}
+    {"name": "Dotori Restaurant", "location": "Borealis", "diet": "Non-Halal", "votes": 0, "lat": 5.265, "lon": 100.44}
+    {"name": "Mi Ban Caf\u00e9", "location": "Borealis", "diet": "Halal", "votes": 0, "lat": 5.265, "lon": 100.44}
+    {"name": "King Kong Ramen", "location": "Borealis", "diet": "Non-Halal", "votes": 0, "lat": 5.265, "lon": 100.44}
+    {"name": "Dragon Noodle", "location": "Borealis", "diet": "Non-Halal", "votes": 0, "lat": 5.265, "lon": 100.44}
+    {"name": "Ayam Penyet Mummy", "location": "Borealis", "diet": "Halal", "votes": 0, "lat": 5.265, "lon": 100.44}
+    {"name": "Taco Bell", "location": "Borealis", "diet": "Halal", "votes": 0, "lat": 5.265, "lon": 100.44}
+    {"name": "Nasi Kandar Nasmir", "location": "Borealis", "diet": "Halal", "votes": 0, "lat": 5.265, "lon": 100.44}
+    {"name": "Secret Recipe", "location": "Borealis", "diet": "Halal", "votes": 0, "lat": 5.265, "lon": 100.44}
+    {"name": "Subway", "location": "Borealis", "diet": "Halal", "votes": 0, "lat": 5.265, "lon": 100.44}
+    {"name": "Nasi Kandar Ali Khan", "location": "Borealis", "diet": "Halal", "votes": 0, "lat": 5.265, "lon": 100.44}
+    {"name": "Pizza Hut", "location": "Borealis", "diet": "Halal", "votes": 0, "lat": 5.265, "lon": 100.44}
+    {"name": "Zus", "location": "Borealis", "diet": "Halal", "votes": 0, "lat": 5.265, "lon": 100.44}
+    {"name": "IKEA", "location": "IKEA Area", "diet": "Halal", "votes": 0, "lat": 5.24, "lon": 100.44}
+    {"name": "Phat Bee Caf\u00e9", "location": "IKEA Area", "diet": "Halal", "votes": 0, "lat": 5.24, "lon": 100.44}
+    {"name": "Gerai Makan Pergi Haji", "location": "IKEA Area", "diet": "Halal", "votes": 0, "lat": 5.24, "lon": 100.44}
+    {"name": "The Coffee Bean & Tea Leaf", "location": "IKEA Area", "diet": "Halal", "votes": 0, "lat": 5.24, "lon": 100.44}
+    {"name": "KFC", "location": "IKEA Area", "diet": "Halal", "votes": 0, "lat": 5.24, "lon": 100.44}
+    {"name": "Mc Donalds", "location": "IKEA Area", "diet": "Halal", "votes": 0, "lat": 5.24, "lon": 100.44}
+    {"name": "Kenny Rogers", "location": "IKEA Area", "diet": "Halal", "votes": 0, "lat": 5.24, "lon": 100.44}
+    {"name": "TeaLive", "location": "IKEA Area", "diet": "Halal", "votes": 0, "lat": 5.24, "lon": 100.44}
+    {"name": "A&W", "location": "IKEA Area", "diet": "Halal", "votes": 0, "lat": 5.24, "lon": 100.44}
 ]
 
 # --- Load and Save JSON ---
@@ -207,3 +288,4 @@ with suggestion_col:
         st.metric("Lunch Records", len(st.session_state.lunch_record))
     else:
         st.info("Add lunch options to get smart suggestions.")
+
