@@ -193,13 +193,13 @@ with main_col:
     st.subheader("🔍 Filter & Suggest Lunch Spot")
     filter_location = st.selectbox("Filter by Location", ["Any"] + sorted(set(opt["location"] for opt in st.session_state.lunch_options)))
     filter_diet = st.selectbox("Filter by Dietary Preference", ["Any"] + sorted(set(opt["diet"] for opt in st.session_state.lunch_options)))
-    filter_theme = st.selectboc("Filter by Food Theme", ["Any"] + sorted(set(opt["theme"] for opt in st.session_state.lunch_options)))
+    filter_theme = st.selectbox("Filter by Food Theme", ["Any"] + sorted(set(opt["theme"] for opt in st.session_state.lunch_options)))
 
     filtered_options = [
         opt for opt in st.session_state.lunch_options
         if (filter_location == "Any" or opt["location"] == filter_location) and
            (filter_diet == "Any" or opt["diet"] == filter_diet) and
-           (not filter_theme or opt.get("theme", "N/A") in filter_theme)
+           (filter_theme == "Any" or opt.get("theme", "N/A") == filter_theme)
     ]
 
     if st.button("🎲 Suggest Lunch Spot"):
@@ -258,10 +258,7 @@ with suggestion_col:
 
         st.markdown("### 🗺️ Lunch Spot Location")
         if st.session_state.suggested_spot and "lat" in st.session_state.suggested_spot and "lon" in st.session_state.suggested_spot:
-            map_data = pd.DataFrame([{
-                "lat": st.session_state.suggested_spot["lat"],
-                "lon": st.session_state.suggested_spot["lon"]
-            }])
+            map_data = pd.DataFrame([{"lat": opt["lat"], "lon": opt["lon"]} for opt in filtered_options])
             st.map(map_data)
         else:
             default_map_data = pd.DataFrame([{"lat": 5.2189, "lon": 100.4491}])  # Default location
