@@ -11,7 +11,7 @@ OPTIONS_FILE = "lunch_options.json"
 RECORD_FILE = "lunch_record.json"
 
 # --- Default lunch options (shortened for brevity) ---
-default_options = [
+default_options =
     [
     {"name": "Meetcha Cafe & Eatery", "location": "Vervea", "diet": "Any", "theme": "Fusion (Local & Western)", "votes": 0, "lat": 5.2645, "lon": 100.4375},
     {"name": "Pan Pan Restaurant", "location": "Vervea", "diet": "Halal", "theme": "Asian, Muslim-friendly", "votes": 0, "lat": 5.2646, "lon": 100.4376},
