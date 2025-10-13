@@ -135,21 +135,19 @@ with main_col:
     ]
 
     for i, opt in enumerate(vote_filtered_options):
-        with st.container():
-            st.markdown(
-                f"""
-                <div style="padding: 10px; border: 1px solid #ccc; border-radius: 8px; margin-bottom: 10px;">
-                    <strong style="font-size: 18px;">{opt['name']}</strong><br>
-                    <span style="font-size: 14px;">Location: {opt['location']} | Diet: {opt['diet']} | Theme: {opt['theme']}</span><br>
-                    <span style="font-size: 14px;">Votes: {opt['votes']}</span>
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
-            if st.button(f"👍 Vote for {opt['name']}", key=f"vote_{i}"):
-                opt["votes"] += 1
-                save_data(OPTIONS_FILE, st.session_state.lunch_options)
-                st.success(f"Thanks for voting for {opt['name']}!")
+    with st.expander(f"👍 Vote for {opt['name']}"):
+        st.markdown(
+            f"""
+            **Location**: {opt['location']}  
+            **Diet**: {opt['diet']}  
+            **Theme**: {opt['theme']}  
+            **Votes**: {opt['votes']}
+            """
+        )
+        if st.button(f"Vote for {opt['name']}", key=f"vote_{i}"):
+            opt["votes"] += 1
+            save_data(OPTIONS_FILE, st.session_state.lunch_options)
+            st.success(f"Thanks for voting for {opt['name']}!")
 
     st.subheader("📋 Current Lunch Options")
     for opt in st.session_state.lunch_options:
