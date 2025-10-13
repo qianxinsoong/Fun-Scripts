@@ -21,7 +21,7 @@
         "name": "Temp Cafe",
         "location": "Vervea",
         "diet": "Halal",
-        "theme": "Cafe, Western",
+        "theme": "Cafe",
         "votes": 0,
         "lat": 5.2647,
         "lon": 100.4377
@@ -399,7 +399,7 @@
         "name": "CAFE ONE TWENTY 9",
         "location": "Utropolis",
         "diet": "Any",
-        "theme": "Cafe, Western",
+        "theme": "Cafe",
         "votes": 0,
         "lat": 5.2404,
         "lon": 100.4383
@@ -498,7 +498,7 @@
         "name": "Ready to E.A.T",
         "location": "Utropolis",
         "diet": "Any",
-        "theme": "Fusion, Western",
+        "theme": "Fusion",
         "votes": 0,
         "lat": 5.2404,
         "lon": 100.4383
