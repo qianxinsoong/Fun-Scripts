@@ -151,7 +151,7 @@ with main_col:
                 save_data(OPTIONS_FILE, st.session_state.lunch_options)
                 st.success(f"Thanks for voting for {opt['name']}!")
 
-    st.expander("📋 Current Lunch Options"):
+    with st.expander("📋 Current Lunch Options"):
     for opt in st.session_state.lunch_options:
         st.write(f"{opt['name']} ({opt['location']}, {opt['diet']}, {opt['theme']}) - Votes: {opt['votes']}")
         
