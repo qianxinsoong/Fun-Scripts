@@ -157,14 +157,14 @@ with main_col:
 
 # --- Suggestion Column ---
 with suggestion_col:
-    st.markdown("<h3>🤔 Today's Suggestion</h3><p>You Vote la, then see how</p>", unsafe_allow_html=True)
+    st.markdown("<h3>🤔 Suggestion</h3><p>You Vote la, then see how</p>", unsafe_allow_html=True)
     if st.session_state.lunch_options:
         scores = {opt['name']: opt['votes'] for opt in st.session_state.lunch_options}
         sorted_options = sorted(st.session_state.lunch_options, key=lambda x: scores.get(x['name'], 0), reverse=True)
         top_pick = sorted_options[0]
         st.success(f"Today's Top Pick: {top_pick['name']} ({top_pick['location']}, {top_pick['diet']}, {top_pick['theme']})")
 
-        st.markdown("### 🗺️ Lunch Spot Location")
+        st.markdown("### 🗺️ Lunch Location")
         if st.session_state.suggested_spot and "lat" in st.session_state.suggested_spot and "lon" in st.session_state.suggested_spot:
             map_data = pd.DataFrame([{
                 "lat": st.session_state.suggested_spot["lat"],
