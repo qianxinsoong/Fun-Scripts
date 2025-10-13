@@ -161,16 +161,15 @@ with suggestion_col:
         scores = {opt['name']: opt['votes'] for opt in st.session_state.lunch_options}
         sorted_options = sorted(st.session_state.lunch_options, key=lambda x: scores.get(x['name'], 0), reverse=True)
         top_pick = sorted_options[0]
-        colA, colB = st.columns([1, 4])
-        with colA:
-            st.markdown("#### 🤔 Today's Suggestion")
-        with colB:
-            st.success(f"{top_pick['name']} ({top_pick['location']}, {top_pick['diet']}, {top_pick['theme']})")
 
-        colC, colD = st.columns([1, 4])
-        with colC:
-            st.markdown("#### 🗺️ Lunch Spot Location")
-        with colD:
+        # Single-line layout for suggestion and map
+        col1, col2 = st.columns([2, 3])
+        with col1:
+            st.markdown(
+                f"<span style='font-size:13px;'><b>Today's Suggestion:</b> {top_pick['name']} ({top_pick['location']}, {top_pick['diet']}, {top_pick['theme']})</span>",
+                unsafe_allow_html=True
+            )
+        with col2:
             if st.session_state.suggested_spot and "lat" in st.session_state.suggested_spot and "lon" in st.session_state.suggested_spot:
                 map_data = pd.DataFrame([{"lat": st.session_state.suggested_spot["lat"], "lon": st.session_state.suggested_spot["lon"]}])
                 st.map(map_data)
@@ -188,16 +187,16 @@ with suggestion_col:
         st.altair_chart(chart, use_container_width=True)
 
         st.markdown("### ⚡ Quick Actions")
-        col1, col2, col3 = st.columns(3)
-        with col1:
+        colA, colB, colC = st.columns(3)
+        with colA:
             if st.button("🔁 Suggest Again"):
                 if filtered_options:
                     suggestion = random.choice(filtered_options)
                     st.session_state.suggested_spot = suggestion
                     st.experimental_rerun()
-        with col2:
+        with colB:
             st.button("📌 Pin This Spot")
-        with col3:
+        with colC:
             st.button("🗺️ Nearby Options")
 
         st.markdown("### 📈 Dashboard Stats")
