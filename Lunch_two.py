@@ -122,17 +122,16 @@ with main_col:
     for record in reversed(st.session_state.lunch_record):
         st.write(f"{record['date']}: {record['place']}")
 
-# Create a two-column layout: left for voting, right for other content
-left_col, right_col = st.columns([2, 3])  # Adjust proportions as needed
+# --- Layout: Three columns ---
+left_col, center_col, right_col = st.columns([2, 3, 2])
 
+# --- Left Column: Voting + Current Lunch Options ---
 with left_col:
     with st.expander("📊 Vote for Your Favorite"):
-        # Filters stacked vertically
         vote_location = st.selectbox("Location", ["Any"] + sorted(set(opt["location"] for opt in st.session_state.lunch_options)))
         vote_diet = st.selectbox("Diet", sorted(set(opt["diet"] for opt in st.session_state.lunch_options)))
         vote_theme = st.selectbox("Theme", ["Any"] + sorted(set(opt["theme"] for opt in st.session_state.lunch_options)))
 
-        # Filtered options
         vote_filtered_options = [
             opt for opt in st.session_state.lunch_options
             if (vote_location == "Any" or opt["location"] == vote_location) and
@@ -140,7 +139,6 @@ with left_col:
                (vote_theme == "Any" or opt["theme"] == vote_theme)
         ]
 
-        # Show top 5 first
         top_5 = vote_filtered_options[:5]
         remaining = vote_filtered_options[5:]
 
@@ -157,7 +155,6 @@ with left_col:
                     save_data(OPTIONS_FILE, st.session_state.lunch_options)
                     st.success(f"Thanks for voting for {opt['name']}!")
 
-        # Show more toggle
         if remaining:
             if st.checkbox("Show more restaurants"):
                 for idx, opt in enumerate(remaining):
@@ -172,17 +169,31 @@ with left_col:
                             opt["votes"] += 1
                             save_data(OPTIONS_FILE, st.session_state.lunch_options)
                             st.success(f"Thanks for voting for {opt['name']}!")
-                        
-left_col, _ = st.columns([2, 3])  # Left column is narrower
 
-with left_col:
     with st.expander("📋 Current Lunch Options"):
         for opt in st.session_state.lunch_options:
             st.write(f"{opt['name']} ({opt['location']}, {opt['diet']}, {opt['theme']}) - Votes: {opt['votes']}")
-        
-# --- Suggestion Column ---
-with suggestion_col:
-    st.markdown("<h3>🤔 Suggestion</h3><p>You Vote la, then see how</p>", unsafe_allow_html=True)
+
+# --- Center Column: Lunch Records ---
+with center_col:
+    st.subheader("🍴 Today's Lunch Record")
+    today = datetime.date.today().strftime("%Y-%m-%d")
+    selected_place = st.selectbox("Where did you go for lunch today?", options=[opt["name"] for opt in st.session_state.lunch_options], index=0, placeholder="Type or select a restaurant...")
+    if st.button("📍 Record Today's Lunch"):
+        record_entry = {"date": today, "place": selected_place}
+        st.session_state.lunch_record.append(record_entry)
+        save_data(RECORD_FILE, st.session_state.lunch_record)
+        st.success(f"Recorded: {selected_place} on {today}")
+
+    st.markdown("### 📆 Past Lunch Records")
+    for record in reversed(st.session_state.lunch_record):
+        st.write(f"{record['date']}: {record['place']}")
+
+# --- Right Column: Suggestions + Stats ---
+with right_col:
+    st.markdown("### 🤔 Suggestion")
+    st.markdown("You Vote la, then see how")
+
     if st.session_state.lunch_options:
         scores = {opt['name']: opt['votes'] for opt in st.session_state.lunch_options}
         sorted_options = sorted(st.session_state.lunch_options, key=lambda x: scores.get(x['name'], 0), reverse=True)
@@ -213,8 +224,8 @@ with suggestion_col:
         col1, col2, col3 = st.columns(3)
         with col1:
             if st.button("🔁 Suggest Again"):
-                if filtered_options:
-                    suggestion = random.choice(filtered_options)
+                if vote_filtered_options:
+                    suggestion = random.choice(vote_filtered_options)
                     st.session_state.suggested_spot = suggestion
                     st.experimental_rerun()
         with col2:
