@@ -171,13 +171,25 @@ with main_col:
                 st.write(f"**Theme:** {opt['theme']}")
                 st.write(f"**Votes:** {opt['votes']}")
 
-st.markdown("### 📊 Voting Trends")
+st.markdown("### 📊 Voting Trends by Theme")
+
+# Convert to DataFrame
 df_votes = pd.DataFrame(st.session_state.lunch_options)
-chart = alt.Chart(df_votes).mark_bar().encode(
-    x=alt.X('name', sort='-y', title='theme'),
+
+# Group by theme and sum the votes
+df_theme_votes = df_votes.groupby('theme', as_index=False)['votes'].sum()
+
+# Create Altair chart with theme on x-axis
+chart = alt.Chart(df_theme_votes).mark_bar().encode(
+    x=alt.X('theme', sort='-y', title='Theme'),
     y=alt.Y('votes', title='Votes'),
-    color='theme'
-).properties(width=600, height=400)
+    color=alt.Color('theme', title='Theme')
+).properties(
+    width=600,
+    height=400,
+    title='📊 Voting Trends by Theme'
+)
+
 st.altair_chart(chart, use_container_width=True)
 
 # --- Suggestion Column ---
