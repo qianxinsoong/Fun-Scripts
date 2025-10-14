@@ -168,7 +168,7 @@ with main_col:
             y=alt.Y('votes', title='Votes'),
             color=alt.Color('theme', title='Theme')
         ).properties(
-            width=500,
+            width=400,
             height=300,
         )
         st.altair_chart(chart, use_container_width=True)
