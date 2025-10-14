@@ -145,22 +145,21 @@ with main_col:
     ]
 
     # --- Collapsed restaurant list ---
+    with st.expander("📝 Vote List", expanded=False):
     for i, opt in enumerate(vote_filtered_options):
-        with st.expander(f"{opt['name']}", expanded=False):
-            st.markdown(
-                f"""
-                <div style="padding: 10px; border: 1px solid #ccc; border-radius: 8px; margin-bottom: 10px;">
-                    <strong style="font-size: 18px;">{opt['name']}</strong><br>
-                    <span style="font-size: 14px;">Location: {opt['location']} | Diet: {opt['diet']} | Theme: {opt['theme']}</span><br>
-                    <span style="font-size: 14px;">Votes: {opt['votes']}</span>
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
-            if st.button(f"👍 Vote for {opt['name']}", key=f"vote_{i}"):
-                opt["votes"] += 1
-                save_data(OPTIONS_FILE, st.session_state.lunch_options)
-                st.success(f"Thanks for voting for {opt['name']}!")
+        st.markdown(
+            f"""
+            <div style="padding: 8px; border: 1px solid #ddd; border-radius: 6px; margin-bottom: 8px; background-color: #fefefe;">
+                <strong style="font-size: 16px;">{opt['name']}</strong><br>
+                <span style="font-size: 13px;">📍 {opt['location']} | 🥗 {opt['diet']} | 🎨 {opt['theme']} | 👍 Votes: {opt['votes']}</span>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+        if st.button(f"👍 Vote for {opt['name']}", key=f"vote_{i}"):
+            opt["votes"] += 1
+            save_data(OPTIONS_FILE, st.session_state.lunch_options)
+            st.success(f"Thanks for voting for {opt['name']}!")
             
 # --- Suggestion Column ---
 with suggestion_col:
