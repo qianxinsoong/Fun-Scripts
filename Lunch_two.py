@@ -145,7 +145,7 @@ with main_col:
     ]
 
     # --- Collapsed vote list ---
-    with st.expander("📝 Vote List", expanded=False):
+    with st.expander("📝 Vote List Here", expanded=False):
         for i, opt in enumerate(vote_filtered_options):
             st.markdown(
                 f"""
@@ -161,8 +161,9 @@ with main_col:
                 save_data(OPTIONS_FILE, st.session_state.lunch_options)
                 st.success(f"Thanks for voting for {opt['name']}!")
       
-     # 📋 Collapsible Group for All Lunch Options
-    with st.expander("📋 Current Lunch Options", expanded=False):
+# 📋 Collapsible Group for All Lunch Options
+    st.subheader("📋 Current Lunch Options")
+    with st.expander("List of Restaurant", expanded=False):
         for opt in st.session_state.lunch_options:
             with st.expander(f"{opt['name']}", expanded=False):
                 st.write(f"**Location:** {opt['location']}")
@@ -196,7 +197,7 @@ with suggestion_col:
             x=alt.X('name', sort='-y', title='Restaurant'),
             y=alt.Y('votes', title='Votes'),
             color='theme'
-        ).properties(width=300, height=300)
+        ).properties(width=600, height=300)
         st.altair_chart(chart, use_container_width=True)
 
         st.markdown("### ⚡ Quick Actions")
@@ -208,7 +209,7 @@ with suggestion_col:
                     st.session_state.suggested_spot = suggestion
                     st.experimental_rerun()
         with col2:
-            st.button("📌 Pin This Spot")
+            st.button("📌 Pin Spot")
         with col3:
             st.button("🗺️ Nearby Options")
 
