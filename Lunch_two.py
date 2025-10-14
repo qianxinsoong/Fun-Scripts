@@ -130,11 +130,14 @@ with main_col:
     st.markdown("### 📆 Past Lunch Records by Group")
     if st.session_state.lunch_record:
         df_records = pd.DataFrame(st.session_state.lunch_record)
-        grouped = df_records.groupby(['date', 'group'])['place'].apply(list).reset_index()
-        for _, row in grouped.iterrows():
-            st.write(f"📅 {row['date']} | 👥 **{row['group']}**: {', '.join(row['place'])}")
-    else:
-        st.info("No lunch records yet.")
+   # Ensure required columns exist
+required_columns = {"date", "group", "place"}
+if required_columns.issubset(df_records.columns):
+    grouped = df_records.groupby(['date', 'group'], as_index=False)['place'].agg(lambda x: ', '.join(x))
+    for _, row in grouped.iterrows():
+        st.write(f"📅 {row['date']} | 👥 **{row['group']}**: {row['place']}")
+else:
+    st.warning("Missing required columns in lunch records. Please ensure 'date', 'group', and 'place' are present.")
 
     st.subheader("📊 Vote for Your Favorite")
     vote_location = st.selectbox("Filter by Location (Voting)", ["Any"] + sorted(set(opt["location"] for opt in st.session_state.lunch_options)))
