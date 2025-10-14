@@ -111,16 +111,30 @@ with main_col:
 
     st.subheader("🍴 Today's Lunch Record")
     today = datetime.date.today().strftime("%Y-%m-%d")
-    selected_place = st.selectbox("Where did you go for lunch today?", options=[opt["name"] for opt in st.session_state.lunch_options], index=0)
-    if st.button("📍 Record Today's Lunch"):
-        record_entry = {"date": today, "place": selected_place}
-        st.session_state.lunch_record.append(record_entry)
-        save_data(RECORD_FILE, st.session_state.lunch_record)
-        st.success(f"Recorded: {selected_place} on {today}")
-
-    st.markdown("### 📆 Past Lunch Records")
-    for record in reversed(st.session_state.lunch_record):
-        st.write(f"{record['date']}: {record['place']}")
+    group_name = st.text_input("Enter Group Name (e.g., QA Team, Engineering A, Lunch Buddies)")
+    selected_place = st.selectbox("Where did this group go for lunch today?", options=[opt["name"] for opt in st.session_state.lunch_options], index=0)
+    
+    if st.button("📍 Record Group's Lunch"):
+        if group_name:
+            record_entry = {
+                "date": today,
+                "group": group_name,
+                "place": selected_place
+            }
+            st.session_state.lunch_record.append(record_entry)
+            save_data(RECORD_FILE, st.session_state.lunch_record)
+            st.success(f"Recorded: {group_name} went to {selected_place} on {today}")
+        else:
+            st.warning("Please enter a group name.")
+    
+    st.markdown("### 📆 Past Lunch Records by Group")
+    if st.session_state.lunch_record:
+        df_records = pd.DataFrame(st.session_state.lunch_record)
+        grouped = df_records.groupby(['date', 'group'])['place'].apply(list).reset_index()
+        for _, row in grouped.iterrows():
+            st.write(f"📅 {row['date']} | 👥 **{row['group']}**: {', '.join(row['place'])}")
+    else:
+        st.info("No lunch records yet.")
 
     st.subheader("📊 Vote for Your Favorite")
     vote_location = st.selectbox("Filter by Location (Voting)", ["Any"] + sorted(set(opt["location"] for opt in st.session_state.lunch_options)))
