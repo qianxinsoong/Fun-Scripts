@@ -122,23 +122,25 @@ with main_col:
     for record in reversed(st.session_state.lunch_record):
         st.write(f"{record['date']}: {record['place']}")
 
-with st.expander("📊 Vote for Your Favorite"):
-    # Filters in columns
-    vote_location = st.selectbox("Location", ["Any"] + sorted(set(opt["location"] for opt in st.session_state.lunch_options)))
-    vote_diet = st.selectbox("Diet", sorted(set(opt["diet"] for opt in st.session_state.lunch_options)))
-    vote_theme = st.selectbox("Theme", ["Any"] + sorted(set(opt["theme"] for opt in st.session_state.lunch_options)))
+# Create a narrow column layout for the voting section
+_, vote_col, _ = st.columns([1, 2, 1])  # Center column is narrower
 
-    # Filtered options
-    vote_filtered_options = [
-        opt for opt in st.session_state.lunch_options
-        if (vote_location == "Any" or opt["location"] == vote_location) and
-           (vote_diet == "Any" or opt["diet"] == vote_diet) and
-           (vote_theme == "Any" or opt["theme"] == vote_theme)
-    ]
+with vote_col:
+    with st.expander("📊 Vote for Your Favorite"):
+        # Filters stacked vertically
+        vote_location = st.selectbox("Location", ["Any"] + sorted(set(opt["location"] for opt in st.session_state.lunch_options)))
+        vote_diet = st.selectbox("Diet", sorted(set(opt["diet"] for opt in st.session_state.lunch_options)))
+        vote_theme = st.selectbox("Theme", ["Any"] + sorted(set(opt["theme"] for opt in st.session_state.lunch_options)))
 
-    # Split layout: narrow left column for voting cards
-    left_col, _ = st.columns([1, 2])  # left column is narrower
-    with left_col:
+        # Filtered options
+        vote_filtered_options = [
+            opt for opt in st.session_state.lunch_options
+            if (vote_location == "Any" or opt["location"] == vote_location) and
+               (vote_diet == "Any" or opt["diet"] == vote_diet) and
+               (vote_theme == "Any" or opt["theme"] == vote_theme)
+        ]
+
+        # Show top 5 first
         top_5 = vote_filtered_options[:5]
         remaining = vote_filtered_options[5:]
 
@@ -155,6 +157,7 @@ with st.expander("📊 Vote for Your Favorite"):
                     save_data(OPTIONS_FILE, st.session_state.lunch_options)
                     st.success(f"Thanks for voting for {opt['name']}!")
 
+        # Show more toggle
         if remaining:
             if st.checkbox("Show more restaurants"):
                 for idx, opt in enumerate(remaining):
