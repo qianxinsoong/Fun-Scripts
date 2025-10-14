@@ -110,8 +110,22 @@ with main_col:
             st.warning("No matching lunch options found.")
 
     st.subheader("🍴 Today's Lunch Record")
-    today = datetime.date.today().strftime("%Y-%m-%d")
-    selected_place = st.selectbox("Where did you go for lunch today?", options=[opt["name"] for opt in st.session_state.lunch_options], index=0)
+today = datetime.date.today().strftime("%Y-%m-%d")
+recorded_today = next((r for r in st.session_state.lunch_record if r["date"] == today), None)
+
+selected_place = st.selectbox(
+    "Where did you go for lunch today?",
+    options=[opt["name"] for opt in st.session_state.lunch_options],
+    index=0
+)
+
+if recorded_today:
+    st.info(f"Already recorded: {recorded_today['place']} on {today}")
+    if st.button("✏️ Edit Today's Lunch Record"):
+        recorded_today["place"] = selected_place
+        save_data(RECORD_FILE, st.session_state.lunch_record)
+        st.success(f"Updated today's lunch record to: {selected_place}")
+else:
     if st.button("📍 Record Today's Lunch"):
         record_entry = {"date": today, "place": selected_place}
         st.session_state.lunch_record.append(record_entry)
