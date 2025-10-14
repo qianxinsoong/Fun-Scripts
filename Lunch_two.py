@@ -197,12 +197,15 @@ with suggestion_col:
         st.metric("Total Votes", sum(opt["votes"] for opt in st.session_state.lunch_options))
         st.metric("Lunch Records", len(st.session_state.lunch_record))
 
-        st.markdown("### 📋 Current Lunch Options")
-        for opt in st.session_state.lunch_options:
-            with st.expander(f"{opt['name']}"):
-                st.write(f"**Location:** {opt['location']}")
-                st.write(f"**Dietary Preference:** {opt['diet']}")
-                st.write(f"**Theme:** {opt['theme']}")
-                st.write(f"**Votes:** {opt['votes']}")
+      
+ # 📋 Collapsible Group for All Lunch Options
+        with st.expander("📋 Current Lunch Options", expanded=False):
+            for opt in st.session_state.lunch_options:
+                with st.expander(f"{opt['name']}", expanded=False):
+                    st.write(f"**Location:** {opt['location']}")
+                    st.write(f"**Dietary Preference:** {opt['diet']}")
+                    st.write(f"**Theme:** {opt['theme']}")
+                    st.write(f"**Votes:** {opt['votes']}")
+
     else:
         st.info("Add lunch options to get smart suggestions.")
