@@ -173,9 +173,12 @@ with left_col:
                             save_data(OPTIONS_FILE, st.session_state.lunch_options)
                             st.success(f"Thanks for voting for {opt['name']}!")
                         
-with st.expander("📋 Current Lunch Options"):
-    for opt in st.session_state.lunch_options:
-        st.write(f"{opt['name']} ({opt['location']}, {opt['diet']}, {opt['theme']}) - Votes: {opt['votes']}")
+left_col, _ = st.columns([2, 3])  # Left column is narrower
+
+with left_col:
+    with st.expander("📋 Current Lunch Options"):
+        for opt in st.session_state.lunch_options:
+            st.write(f"{opt['name']} ({opt['location']}, {opt['diet']}, {opt['theme']}) - Votes: {opt['votes']}")
         
 # --- Suggestion Column ---
 with suggestion_col:
