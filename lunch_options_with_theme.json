@@ -934,5 +934,14 @@
         "votes": 0,
         "lat": 5.336264,
         "lon": 100.427384
+    },
+    {
+        "name": "Warung Kampung Kari Sembilang",
+        "location": "Batu Kawan",
+        "diet": "Halal",
+        "theme": "Malay",
+        "votes": 0,
+        "lat": 5.274514,
+        "lon": 100.427535
     }
 ]
