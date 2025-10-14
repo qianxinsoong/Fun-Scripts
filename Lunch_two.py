@@ -123,7 +123,7 @@ with main_col:
         st.write(f"{record['date']}: {record['place']}")
 
 # Create a narrow column layout for the voting section
-_, vote_col, _ = st.columns([2, 1, 1])  # Center column is narrower
+_, vote_col, _ = st.columns([1, 2, 1])  # Center column is narrower
 
 with vote_col:
     with st.expander("📊 Vote for Your Favorite"):
