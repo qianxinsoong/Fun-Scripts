@@ -113,7 +113,7 @@ with main_col:
     today = datetime.date.today().strftime("%Y-%m-%d")
     group_name = st.text_input("Enter Group Name (e.g., QA Team, Engineering A, Lunch Buddies)")
     selected_place = st.selectbox("Where did this group go for lunch today?", options=[opt["name"] for opt in st.session_state.lunch_options], index=0)
-    
+
     if st.button("📍 Record Group's Lunch"):
         if group_name:
             record_entry = {
@@ -126,18 +126,19 @@ with main_col:
             st.success(f"Recorded: {group_name} went to {selected_place} on {today}")
         else:
             st.warning("Please enter a group name.")
-    
+
     st.markdown("### 📆 Past Lunch Records by Group")
     if st.session_state.lunch_record:
         df_records = pd.DataFrame(st.session_state.lunch_record)
-   # Ensure required columns exist
-required_columns = {"date", "group", "place"}
-if required_columns.issubset(df_records.columns):
-    grouped = df_records.groupby(['date', 'group'], as_index=False)['place'].agg(lambda x: ', '.join(x))
-    for _, row in grouped.iterrows():
-        st.write(f"📅 {row['date']} | 👥 **{row['group']}**: {row['place']}")
-else:
-    st.warning("Missing required columns in lunch records. Please ensure 'date', 'group', and 'place' are present.")
+        required_columns = {"date", "group", "place"}
+        if required_columns.issubset(df_records.columns):
+            grouped = df_records.groupby(['date', 'group'], as_index=False)['place'].agg(lambda x: ', '.join(x))
+            for _, row in grouped.iterrows():
+                st.write(f"📅 {row['date']} | 👥 **{row['group']}**: {row['place']}")
+        else:
+            st.warning("Missing required columns in lunch records.")
+    else:
+        st.info("No lunch records yet.")
 
     st.subheader("📊 Vote for Your Favorite")
     vote_location = st.selectbox("Filter by Location (Voting)", ["Any"] + sorted(set(opt["location"] for opt in st.session_state.lunch_options)))
