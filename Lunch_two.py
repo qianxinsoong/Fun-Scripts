@@ -140,10 +140,9 @@ with st.expander("📊 Vote for Your Favorite"):
                 **Theme**: {opt['theme']}  
                 **Votes**: {opt['votes']}
                 """)
-            
-            if st.button(f"👍 Vote for {opt['name']}", key=f"vote_{i}"): opt["votes"] += 1
-                save_data(OPTIONS_FILE, st.session_state.lunch_options)
-            st.success(f"Thanks for voting for {opt['name']}!")
+    if st.button(f"👍 Vote for {opt['name']}", key=f"vote_{i}"): opt["votes"] += 1
+        save_data(OPTIONS_FILE, st.session_state.lunch_options)
+        st.success(f"Thanks for voting for {opt['name']}!")
      
 with st.expander("📋 Current Lunch Options"):
     for opt in st.session_state.lunch_options:
