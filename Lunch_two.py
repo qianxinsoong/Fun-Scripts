@@ -122,10 +122,10 @@ with main_col:
     for record in reversed(st.session_state.lunch_record):
         st.write(f"{record['date']}: {record['place']}")
 
-# Create a narrow column layout for the voting section
-_, vote_col, _ = st.columns([1, 2, 1])  # Center column is narrower
+# Create a two-column layout: left for voting, right for other content
+left_col, right_col = st.columns([2, 3])  # Adjust proportions as needed
 
-with vote_col:
+with left_col:
     with st.expander("📊 Vote for Your Favorite"):
         # Filters stacked vertically
         vote_location = st.selectbox("Location", ["Any"] + sorted(set(opt["location"] for opt in st.session_state.lunch_options)))
