@@ -6,6 +6,14 @@ import os
 import pandas as pd
 import altair as alt
 
+# --- Page Configuration ---
+st.set_page_config(
+    page_title="Lunch Decision Dashboard",
+    page_icon="🍽️",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
+
 # --- File paths ---
 OPTIONS_FILE = "lunch_options_with_theme.json"
 RECORD_FILE = "lunch_record.json"
@@ -37,29 +45,31 @@ st.title("🍽️ Lunch Decision Dashboard")
 
 # --- Sidebar: Add new lunch option ---
 st.sidebar.header("➕ Add Lunch Option")
-name = st.sidebar.text_input("Restaurant Name")
-location = st.sidebar.text_input("Location")
-diet = st.sidebar.selectbox("Dietary Preference", ["Any", "Halal", "Non-Halal", "Vegetarian", "Vegan", "Gluten-Free"])
-theme = st.sidebar.text_input("Theme")
-lat = st.sidebar.text_input("Latitude")
-lon = st.sidebar.text_input("Longitude")
+with st.sidebar.form("add_option_form"):
+    name = st.text_input("Restaurant Name")
+    location = st.text_input("Location")
+    diet = st.selectbox("Dietary Preference", ["Any", "Halal", "Non-Halal", "Vegetarian", "Vegan", "Gluten-Free"])
+    theme = st.text_input("Theme")
+    lat = st.text_input("Latitude")
+    lon = st.text_input("Longitude")
+    submitted = st.form_submit_button("Add Option")
 
-if st.sidebar.button("Add Option"):
-    if name and location and lat and lon and theme:
-        try:
-            lat_val = float(lat)
-            lon_val = float(lon)
-            new_option = {"name": name, "location": location, "diet": diet, "theme": theme, "votes": 0, "lat": lat_val, "lon": lon_val}
-            if not any(opt["name"].lower() == name.lower() for opt in st.session_state.lunch_options):
-                st.session_state.lunch_options.append(new_option)
-                save_data(OPTIONS_FILE, st.session_state.lunch_options)
-                st.sidebar.success(f"Added {name} to lunch options.")
-            else:
-                st.sidebar.warning(f"{name} is already in the list.")
-        except ValueError:
-            st.sidebar.error("Latitude and Longitude must be valid numbers.")
-    else:
-        st.sidebar.error("Please enter all fields including coordinates and theme.")
+    if submitted:
+        if name and location and lat and lon and theme:
+            try:
+                lat_val = float(lat)
+                lon_val = float(lon)
+                new_option = {"name": name, "location": location, "diet": diet, "theme": theme, "votes": 0, "lat": lat_val, "lon": lon_val}
+                if not any(opt["name"].lower() == name.lower() for opt in st.session_state.lunch_options):
+                    st.session_state.lunch_options.append(new_option)
+                    save_data(OPTIONS_FILE, st.session_state.lunch_options)
+                    st.success(f"Added {name} to lunch options.")
+                else:
+                    st.warning(f"{name} is already in the list.")
+            except ValueError:
+                st.error("Latitude and Longitude must be valid numbers.")
+        else:
+            st.error("Please enter all fields including coordinates and theme.")
 
 # --- Admin Panel ---
 st.sidebar.header("🔐 Admin Panel")
@@ -97,7 +107,8 @@ with main_col:
             suggestion = random.choice(filtered_options)
             st.session_state.suggested_spot = suggestion
             with st.container():
-                st.markdown("🎯 **Suggested Lunch Spot**")
+                st.markdown("### 🎯 Suggested Lunch Spot")
+                st.markdown(f"**{suggestion['name']}**")
                 st.write(f"📍 Location: {suggestion['location']}")
                 st.write(f"🥗 Diet: {suggestion['diet']}")
                 st.write(f"🎨 Theme: {suggestion['theme']}")
@@ -150,8 +161,11 @@ with main_col:
     with st.expander("📝 Vote List Here", expanded=False):
         for i, opt in enumerate(vote_filtered_options):
             with st.container():
-                st.markdown(f"**{opt['name']}**")
-                st.write(f"📍 {opt['location']} | 🥗 {opt['diet']} | 🎨 {opt['theme']} | 👍 Votes: {opt['votes']}")
+                st.markdown(f"### {opt['name']}")
+                st.write(f"📍 Location: {opt['location']}")
+                st.write(f"🥗 Diet: {opt['diet']}")
+                st.write(f"🎨 Theme: {opt['theme']}")
+                st.write(f"👍 Votes: {opt['votes']}")
                 if st.button(f"👍 Vote for {opt['name']}", key=f"vote_{i}"):
                     opt["votes"] += 1
                     save_data(OPTIONS_FILE, st.session_state.lunch_options)
@@ -182,7 +196,7 @@ with main_col:
 
 # --- Suggestion Column ---
 with suggestion_col:
-    st.subheader("🤔 Suggestion")
+    st.markdown("## 🤔 Suggestion")
     st.write("You Vote la, then see how")
     if st.session_state.lunch_options:
         scores = {opt['name']: opt['votes'] for opt in st.session_state.lunch_options}
