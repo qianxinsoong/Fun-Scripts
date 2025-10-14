@@ -126,10 +126,10 @@ with main_col:
     st.subheader("📊 Vote for Your Favorite")
 
     # --- Compact filter container ---
-    st.markdown("""
-        <div style="padding: 10px; border: 1px solid #ccc; border-radius: 8px; background-color: #f9f9f9; margin-bottom: 10px;">
-            <h4 style="margin-top: 0;">🔍 Voting Filters</h4>
-    """, unsafe_allow_html=True)
+#    st.markdown("""
+#        <div style="padding: 10px; border: 1px solid #ccc; border-radius: 8px; background-color: #f9f9f9; margin-bottom: 10px;">
+#            <h4 style="margin-top: 0;">🔍 Voting Filters</h4>
+#    """, unsafe_allow_html=True)
 
     vote_location = st.selectbox("Filter by Location (Voting)", ["Any"] + sorted(set(opt["location"] for opt in st.session_state.lunch_options)))
     vote_diet = st.selectbox("Filter by Dietary Preference (Voting)", sorted(set(opt["diet"] for opt in st.session_state.lunch_options)))
@@ -197,7 +197,7 @@ with suggestion_col:
             x=alt.X('name', sort='-y', title='Restaurant'),
             y=alt.Y('votes', title='Votes'),
             color='theme'
-        ).properties(width=600, height=300)
+        ).properties(width=300, height=300)
         st.altair_chart(chart, use_container_width=True)
 
         st.markdown("### ⚡ Quick Actions")
