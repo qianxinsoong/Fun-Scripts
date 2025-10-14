@@ -160,16 +160,15 @@ with main_col:
                 opt["votes"] += 1
                 save_data(OPTIONS_FILE, st.session_state.lunch_options)
                 st.success(f"Thanks for voting for {opt['name']}!")
-
       
      # 📋 Collapsible Group for All Lunch Options
-        with st.expander("📋 Current Lunch Options", expanded=False):
-            for opt in st.session_state.lunch_options:
-                with st.expander(f"{opt['name']}", expanded=False):
-                    st.write(f"**Location:** {opt['location']}")
-                    st.write(f"**Dietary Preference:** {opt['diet']}")
-                    st.write(f"**Theme:** {opt['theme']}")
-                    st.write(f"**Votes:** {opt['votes']}")
+    with st.expander("📋 Current Lunch Options", expanded=False):
+        for opt in st.session_state.lunch_options:
+            with st.expander(f"{opt['name']}", expanded=False):
+                st.write(f"**Location:** {opt['location']}")
+                st.write(f"**Dietary Preference:** {opt['diet']}")
+                st.write(f"**Theme:** {opt['theme']}")
+                st.write(f"**Votes:** {opt['votes']}")
 
 # --- Suggestion Column ---
 with suggestion_col:
