@@ -122,35 +122,29 @@ with main_col:
     for record in reversed(st.session_state.lunch_record):
         st.write(f"{record['date']}: {record['place']}")
 
-    st.subheader("📊 Vote for Your Favorite")
+with st.expander("📊 Vote for Your Favorite"):
     vote_location = st.selectbox("Filter by Location (Voting)", ["Any"] + sorted(set(opt["location"] for opt in st.session_state.lunch_options)))
     vote_diet = st.selectbox("Filter by Dietary Preference (Voting)", sorted(set(opt["diet"] for opt in st.session_state.lunch_options)))
     vote_theme = st.selectbox("Filter by Theme (Voting)", ["Any"] + sorted(set(opt["theme"] for opt in st.session_state.lunch_options)))
-
-    vote_filtered_options = [
-        opt for opt in st.session_state.lunch_options
-        if (vote_location == "Any" or opt["location"] == vote_location) and
-           (vote_diet == "Any" or opt["diet"] == vote_diet) and
-           (vote_theme == "Any" or opt["theme"] == vote_theme)
-    ]
-
+    
+    vote_filtered_options = [opt for opt in st.session_state.lunch_options
+                             if (vote_location == "Any" or opt["location"] == vote_location) and
+                             (vote_diet == "Any" or opt["diet"] == vote_diet) and
+                             (vote_theme == "Any" or opt["theme"] == vote_theme)]
+    
     for i, opt in enumerate(vote_filtered_options):
-        with st.container():
-            st.markdown(
-                f"""
-                <div style="padding: 10px; border: 1px solid #ccc; border-radius: 8px; margin-bottom: 10px;">
-                    <strong style="font-size: 18px;">{opt['name']}</strong><br>
-                    <span style="font-size: 14px;">Location: {opt['location']} | Diet: {opt['diet']} | Theme: {opt['theme']}</span><br>
-                    <span style="font-size: 14px;">Votes: {opt['votes']}</span>
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
-            if st.button(f"👍 Vote for {opt['name']}", key=f"vote_{i}"):
-                opt["votes"] += 1
+        with st.expander(f"🍽️ {opt['name']}"):
+            st.markdown(f"""
+                **Location**: {opt['location']}  
+                **Diet**: {opt['diet']}  
+                **Theme**: {opt['theme']}  
+                **Votes**: {opt['votes']}
+                """)
+            
+            if st.button(f"👍 Vote for {opt['name']}", key=f"vote_{i}"): opt["votes"] += 1
                 save_data(OPTIONS_FILE, st.session_state.lunch_options)
-                st.success(f"Thanks for voting for {opt['name']}!")
-
+            st.success(f"Thanks for voting for {opt['name']}!")
+     
 with st.expander("📋 Current Lunch Options"):
     for opt in st.session_state.lunch_options:
         st.write(f"{opt['name']} ({opt['location']}, {opt['diet']}, {opt['theme']}) - Votes: {opt['votes']}")
