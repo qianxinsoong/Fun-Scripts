@@ -122,7 +122,8 @@ with main_col:
     for record in reversed(st.session_state.lunch_record):
         st.write(f"{record['date']}: {record['place']}")
 
-    st.subheader("📊 Vote for Your Favorite")
+   st.subheader("📊 Vote for Your Favorite")
+with st.expander("📊 Vote for Your Favorite", expanded=False):
     vote_location = st.selectbox("Filter by Location (Voting)", ["Any"] + sorted(set(opt["location"] for opt in st.session_state.lunch_options)))
     vote_diet = st.selectbox("Filter by Dietary Preference (Voting)", sorted(set(opt["diet"] for opt in st.session_state.lunch_options)))
     vote_theme = st.selectbox("Filter by Theme (Voting)", ["Any"] + sorted(set(opt["theme"] for opt in st.session_state.lunch_options)))
@@ -135,7 +136,7 @@ with main_col:
     ]
 
     for i, opt in enumerate(vote_filtered_options):
-        with st.container():
+        with st.expander(f"{opt['name']}", expanded=False):
             st.markdown(
                 f"""
                 <div style="padding: 10px; border: 1px solid #ccc; border-radius: 8px; margin-bottom: 10px;">
