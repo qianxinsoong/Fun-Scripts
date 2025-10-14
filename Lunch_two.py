@@ -169,7 +169,7 @@ with main_col:
                 st.success(f"Thanks for voting for {opt['name']}!")
 
     st.subheader("📋 Current Lunch Options")
-    with st.expander("List of Restaurant", expanded=False):
+    with st.expander("⚡ List of Restaurant", expanded=False):
         for opt in st.session_state.lunch_options:
             with st.expander(f"{opt['name']}", expanded=False):
                 st.write(f"**Location:** {opt['location']}")
@@ -210,19 +210,6 @@ with suggestion_col:
         else:
             default_map_data = pd.DataFrame([{"lat": 5.2189, "lon": 100.4491}])  # Batu Kawan default
             st.map(default_map_data)
-
-        st.markdown("### ⚡ Quick Actions")
-        col1, col2, col3 = st.columns(3)
-        with col1:
-            if st.button("🔁 Suggest Again"):
-                if filtered_options:
-                    suggestion = random.choice(filtered_options)
-                    st.session_state.suggested_spot = suggestion
-                    st.experimental_rerun()
-        with col2:
-            st.button("📌 Pin This Spot")
-        with col3:
-            st.button("🗺️ Nearby Options")
 
         st.markdown("### 📈 Dashboard Stats")
         st.metric("Total Votes", sum(opt["votes"] for opt in st.session_state.lunch_options))
