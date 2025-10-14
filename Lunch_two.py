@@ -144,19 +144,39 @@ with st.expander("📊 Vote for Your Favorite"):
     top_5 = vote_filtered_options[:5]
     remaining = vote_filtered_options[5:]
 
-    for i, opt in enumerate(top_5):
-        with st.expander(f"🍽️ {opt['name']}"):
-            st.markdown(f"""
-                **Location**: {opt['location']}  
-                **Diet**: {opt['diet']}  
-                **Theme**: {opt['theme']}  
-                **Votes**: {opt['votes']}
-            """)
-            if st.button(f"👍 Vote for {opt['name']}", key=f"vote_top_{i}"):
-                opt["votes"] += 1
-                save_data(OPTIONS_FILE, st.session_state.lunch_options)
-                st.success(f"Thanks for voting for {opt['name']}!")
+    # Display top 5 in two columns
+    cols = st.columns(2)
+    for idx, opt in enumerate(top_5):
+        with cols[idx % 2]:
+            with st.expander(f"🍽️ {opt['name']}"):
+                st.markdown(f"""
+                    **Location**: {opt['location']}  
+                    **Diet**: {opt['diet']}  
+                    **Theme**: {opt['theme']}  
+                    **Votes**: {opt['votes']}
+                """)
+                if st.button(f"👍 Vote for {opt['name']}", key=f"vote_top_{idx}"):
+                    opt["votes"] += 1
+                    save_data(OPTIONS_FILE, st.session_state.lunch_options)
+                    st.success(f"Thanks for voting for {opt['name']}!")
 
+    # Toggle to show more
+    if remaining:
+        if st.checkbox("Show more restaurants"):
+            more_cols = st.columns(2)
+            for idx, opt in enumerate(remaining):
+                with more_cols[idx % 2]:
+                    with st.expander(f"🍽️ {opt['name']}"):
+                        st.markdown(f"""
+                            **Location**: {opt['location']}  
+                            **Diet**: {opt['diet']}  
+                            **Theme**: {opt['theme']}  
+                            **Votes**: {opt['votes']}
+                        """)
+                        if st.button(f"👍 Vote for {opt['name']}", key=f"vote_more_{idx}"):
+                            opt["votes"] += 1
+                            save_data(OPTIONS_FILE, st.session_state.lunch_options)
+                            st.success(f"Thanks for voting for {opt['name']}!")
     # Toggle to show more
     if remaining:
         if st.checkbox("Show more restaurants"):
