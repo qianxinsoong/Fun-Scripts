@@ -124,13 +124,9 @@ with main_col:
 
 with st.expander("📊 Vote for Your Favorite"):
     # Filters in columns
-    col1, col2, col3 = st.columns(3)
-    with col1:
-        vote_location = st.selectbox("Location", ["Any"] + sorted(set(opt["location"] for opt in st.session_state.lunch_options)))
-    with col2:
-        vote_diet = st.selectbox("Diet", sorted(set(opt["diet"] for opt in st.session_state.lunch_options)))
-    with col3:
-        vote_theme = st.selectbox("Theme", ["Any"] + sorted(set(opt["theme"] for opt in st.session_state.lunch_options)))
+    vote_location = st.selectbox("Location", ["Any"] + sorted(set(opt["location"] for opt in st.session_state.lunch_options)))
+    vote_diet = st.selectbox("Diet", sorted(set(opt["diet"] for opt in st.session_state.lunch_options)))
+    vote_theme = st.selectbox("Theme", ["Any"] + sorted(set(opt["theme"] for opt in st.session_state.lunch_options)))
 
     # Filtered options
     vote_filtered_options = [
