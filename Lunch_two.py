@@ -151,11 +151,6 @@ with main_col:
                 save_data(OPTIONS_FILE, st.session_state.lunch_options)
                 st.success(f"Thanks for voting for {opt['name']}!")
 
-  
-with st.expander("📋 Current Lunch Options"):
-    for opt in st.session_state.lunch_options:
-        st.write(f"{opt['name']} ({opt['location']}, {opt['diet']}, {opt['theme']}) - Votes: {opt['votes']}")
-
 # --- Suggestion Column ---
 with suggestion_col:
     st.markdown("<h3>🤔 Suggestion</h3><p>You Vote la, then see how</p>", unsafe_allow_html=True)
@@ -201,5 +196,13 @@ with suggestion_col:
         st.markdown("### 📈 Dashboard Stats")
         st.metric("Total Votes", sum(opt["votes"] for opt in st.session_state.lunch_options))
         st.metric("Lunch Records", len(st.session_state.lunch_record))
+
+        st.markdown("### 📋 Current Lunch Options")
+        for opt in st.session_state.lunch_options:
+            with st.expander(f"{opt['name']}"):
+                st.write(f"**Location:** {opt['location']}")
+                st.write(f"**Dietary Preference:** {opt['diet']}")
+                st.write(f"**Theme:** {opt['theme']}")
+                st.write(f"**Votes:** {opt['votes']}")
     else:
         st.info("Add lunch options to get smart suggestions.")
