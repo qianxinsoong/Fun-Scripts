@@ -185,9 +185,8 @@ chart = alt.Chart(df_theme_votes).mark_bar().encode(
     y=alt.Y('votes', title='Votes'),
     color=alt.Color('theme', title='Theme')
 ).properties(
-    width=600,
-    height=400,
-    title='📊 Voting Trends by Theme'
+    width=500,
+    height=300,
 )
 
 st.altair_chart(chart, use_container_width=True)
