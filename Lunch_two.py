@@ -176,8 +176,8 @@ df_votes = pd.DataFrame(st.session_state.lunch_options)
 chart = alt.Chart(df_votes).mark_bar().encode(
     x=alt.X('name', sort='-y', title='Restaurant'),
     y=alt.Y('votes', title='Votes'),
-    color='theme'
-).properties(width=600, height=300)
+    color='Theme'
+).properties(width=600, height=400)
 st.altair_chart(chart, use_container_width=True)
 
 # --- Suggestion Column ---
