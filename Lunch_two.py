@@ -123,10 +123,16 @@ with main_col:
         st.write(f"{record['date']}: {record['place']}")
 
 with st.expander("📊 Vote for Your Favorite"):
-    vote_location = st.selectbox("Filter by Location (Voting)", ["Any"] + sorted(set(opt["location"] for opt in st.session_state.lunch_options)))
-    vote_diet = st.selectbox("Filter by Dietary Preference (Voting)", sorted(set(opt["diet"] for opt in st.session_state.lunch_options)))
-    vote_theme = st.selectbox("Filter by Theme (Voting)", ["Any"] + sorted(set(opt["theme"] for opt in st.session_state.lunch_options)))
+    # Filters in columns
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        vote_location = st.selectbox("Location", ["Any"] + sorted(set(opt["location"] for opt in st.session_state.lunch_options)))
+    with col2:
+        vote_diet = st.selectbox("Diet", sorted(set(opt["diet"] for opt in st.session_state.lunch_options)))
+    with col3:
+        vote_theme = st.selectbox("Theme", ["Any"] + sorted(set(opt["theme"] for opt in st.session_state.lunch_options)))
 
+    # Filtered options
     vote_filtered_options = [
         opt for opt in st.session_state.lunch_options
         if (vote_location == "Any" or opt["location"] == vote_location) and
@@ -134,7 +140,11 @@ with st.expander("📊 Vote for Your Favorite"):
            (vote_theme == "Any" or opt["theme"] == vote_theme)
     ]
 
-    for i, opt in enumerate(vote_filtered_options):
+    # Show top 5 first
+    top_5 = vote_filtered_options[:5]
+    remaining = vote_filtered_options[5:]
+
+    for i, opt in enumerate(top_5):
         with st.expander(f"🍽️ {opt['name']}"):
             st.markdown(f"""
                 **Location**: {opt['location']}  
@@ -142,11 +152,27 @@ with st.expander("📊 Vote for Your Favorite"):
                 **Theme**: {opt['theme']}  
                 **Votes**: {opt['votes']}
             """)
-            if st.button(f"👍 Vote for {opt['name']}", key=f"vote_{i}"):
+            if st.button(f"👍 Vote for {opt['name']}", key=f"vote_top_{i}"):
                 opt["votes"] += 1
                 save_data(OPTIONS_FILE, st.session_state.lunch_options)
                 st.success(f"Thanks for voting for {opt['name']}!")
-                
+
+    # Toggle to show more
+    if remaining:
+        if st.checkbox("Show more restaurants"):
+            for i, opt in enumerate(remaining):
+                with st.expander(f"🍽️ {opt['name']}"):
+                    st.markdown(f"""
+                        **Location**: {opt['location']}  
+                        **Diet**: {opt['diet']}  
+                        **Theme**: {opt['theme']}  
+                        **Votes**: {opt['votes']}
+                    """)
+                    if st.button(f"👍 Vote for {opt['name']}", key=f"vote_more_{i}"):
+                        opt["votes"] += 1
+                        save_data(OPTIONS_FILE, st.session_state.lunch_options)
+                        st.success(f"Thanks for voting for {opt['name']}!")
+                        
 with st.expander("📋 Current Lunch Options"):
     for opt in st.session_state.lunch_options:
         st.write(f"{opt['name']} ({opt['location']}, {opt['diet']}, {opt['theme']}) - Votes: {opt['votes']}")
