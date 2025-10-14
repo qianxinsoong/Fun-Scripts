@@ -185,7 +185,7 @@ chart = alt.Chart(df_theme_votes).mark_bar().encode(
     y=alt.Y('votes', title='Votes'),
     color=alt.Color('theme', title='Theme')
 ).properties(
-    width=500,
+    width=400,
     height=300,
 )
 
