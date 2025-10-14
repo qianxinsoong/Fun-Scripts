@@ -174,7 +174,7 @@ with main_col:
 st.markdown("### 📊 Voting Trends")
 df_votes = pd.DataFrame(st.session_state.lunch_options)
 chart = alt.Chart(df_votes).mark_bar().encode(
-    x=alt.X('name', sort='-y', title='Restaurant'),
+    x=alt.X('name', sort='-y', title='theme'),
     y=alt.Y('votes', title='Votes'),
     color='theme'
 ).properties(width=600, height=400)
