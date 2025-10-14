@@ -111,7 +111,7 @@ with main_col:
 
     st.subheader("🍴 Today's Lunch Record")
     today = datetime.date.today().strftime("%Y-%m-%d")
-    selected_place = st.selectbox("Where did you go for lunch today?", options=[opt["name"] for opt in st.session_state.lunch_options], index=0, placeholder="Type or select a restaurant...")
+    selected_place = st.selectbox("Where did you go for lunch today?", options=[opt["name"] for opt in st.session_state.lunch_options], index=0)
     if st.button("📍 Record Today's Lunch"):
         record_entry = {"date": today, "place": selected_place}
         st.session_state.lunch_record.append(record_entry)
@@ -122,20 +122,10 @@ with main_col:
     for record in reversed(st.session_state.lunch_record):
         st.write(f"{record['date']}: {record['place']}")
 
-with main_col:
     st.subheader("📊 Vote for Your Favorite")
-
-    # --- Compact filter container ---
-#    st.markdown("""
-#        <div style="padding: 10px; border: 1px solid #ccc; border-radius: 8px; background-color: #f9f9f9; margin-bottom: 10px;">
-#            <h4 style="margin-top: 0;">🔍 Voting Filters</h4>
-#    """, unsafe_allow_html=True)
-
     vote_location = st.selectbox("Filter by Location (Voting)", ["Any"] + sorted(set(opt["location"] for opt in st.session_state.lunch_options)))
     vote_diet = st.selectbox("Filter by Dietary Preference (Voting)", sorted(set(opt["diet"] for opt in st.session_state.lunch_options)))
     vote_theme = st.selectbox("Filter by Theme (Voting)", ["Any"] + sorted(set(opt["theme"] for opt in st.session_state.lunch_options)))
-
-    st.markdown("</div>", unsafe_allow_html=True)  # Close the styled container
 
     vote_filtered_options = [
         opt for opt in st.session_state.lunch_options
@@ -144,7 +134,6 @@ with main_col:
            (vote_theme == "Any" or opt["theme"] == vote_theme)
     ]
 
-    # --- Collapsed vote list ---
     with st.expander("📝 Vote List Here", expanded=False):
         for i, opt in enumerate(vote_filtered_options):
             st.markdown(
@@ -160,8 +149,7 @@ with main_col:
                 opt["votes"] += 1
                 save_data(OPTIONS_FILE, st.session_state.lunch_options)
                 st.success(f"Thanks for voting for {opt['name']}!")
-      
-# 📋 Collapsible Group for All Lunch Options
+
     st.subheader("📋 Current Lunch Options")
     with st.expander("List of Restaurant", expanded=False):
         for opt in st.session_state.lunch_options:
@@ -171,25 +159,19 @@ with main_col:
                 st.write(f"**Theme:** {opt['theme']}")
                 st.write(f"**Votes:** {opt['votes']}")
 
-st.markdown("### 📊 Voting Trends by Theme")
-
-# Convert to DataFrame
-df_votes = pd.DataFrame(st.session_state.lunch_options)
-
-# Group by theme and sum the votes
-df_theme_votes = df_votes.groupby('theme', as_index=False)['votes'].sum()
-
-# Create Altair chart with theme on x-axis
-chart = alt.Chart(df_theme_votes).mark_bar().encode(
-    x=alt.X('theme', sort='-y', title='Theme'),
-    y=alt.Y('votes', title='Votes'),
-    color=alt.Color('theme', title='Theme')
-).properties(
-    width=400,
-    height=300,
-)
-
-st.altair_chart(chart, use_container_width=True)
+    st.markdown("### 📊 Voting Trends by Theme")
+    df_votes = pd.DataFrame(st.session_state.lunch_options)
+    if not df_votes.empty and "theme" in df_votes.columns:
+        df_theme_votes = df_votes.groupby('theme', as_index=False)['votes'].sum()
+        chart = alt.Chart(df_theme_votes).mark_bar().encode(
+            x=alt.X('theme', sort='-y', title='Theme'),
+            y=alt.Y('votes', title='Votes'),
+            color=alt.Color('theme', title='Theme')
+        ).properties(
+            width=400,
+            height=300,
+        )
+        st.altair_chart(chart, use_container_width=True)
 
 # --- Suggestion Column ---
 with suggestion_col:
@@ -227,6 +209,5 @@ with suggestion_col:
         st.markdown("### 📈 Dashboard Stats")
         st.metric("Total Votes", sum(opt["votes"] for opt in st.session_state.lunch_options))
         st.metric("Lunch Records", len(st.session_state.lunch_record))
-
     else:
         st.info("Add lunch options to get smart suggestions.")
