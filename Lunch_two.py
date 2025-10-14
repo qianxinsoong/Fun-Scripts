@@ -171,6 +171,15 @@ with main_col:
                 st.write(f"**Theme:** {opt['theme']}")
                 st.write(f"**Votes:** {opt['votes']}")
 
+    st.markdown("### 📊 Voting Trends")
+            df_votes = pd.DataFrame(st.session_state.lunch_options)
+            chart = alt.Chart(df_votes).mark_bar().encode(
+                x=alt.X('name', sort='-y', title='Restaurant'),
+                y=alt.Y('votes', title='Votes'),
+                color='theme'
+            ).properties(width=600, height=300)
+            st.altair_chart(chart, use_container_width=True)
+
 # --- Suggestion Column ---
 with suggestion_col:
     st.markdown("<h3>🤔 Suggestion</h3><p>You Vote la, then see how</p>", unsafe_allow_html=True)
@@ -191,15 +200,6 @@ with suggestion_col:
             default_map_data = pd.DataFrame([{"lat": 5.2189, "lon": 100.4491}])  # Batu Kawan default
             st.map(default_map_data)
 
-        st.markdown("### 📊 Voting Trends")
-        df_votes = pd.DataFrame(st.session_state.lunch_options)
-        chart = alt.Chart(df_votes).mark_bar().encode(
-            x=alt.X('name', sort='-y', title='Restaurant'),
-            y=alt.Y('votes', title='Votes'),
-            color='theme'
-        ).properties(width=300, height=300)
-        st.altair_chart(chart, use_container_width=True)
-
         st.markdown("### ⚡ Quick Actions")
         col1, col2, col3 = st.columns(3)
         with col1:
@@ -209,7 +209,7 @@ with suggestion_col:
                     st.session_state.suggested_spot = suggestion
                     st.experimental_rerun()
         with col2:
-            st.button("📌 Pin Spot")
+            st.button("📌 Pin This Spot")
         with col3:
             st.button("🗺️ Nearby Options")
 
