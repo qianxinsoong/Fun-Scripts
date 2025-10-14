@@ -96,16 +96,11 @@ with main_col:
         if filtered_options:
             suggestion = random.choice(filtered_options)
             st.session_state.suggested_spot = suggestion
-            st.markdown(
-                f"""
-                <div style="padding: 10px; background-color: #e6f7ff; border-radius: 8px; border: 1px solid #1890ff;">
-                    <p style="margin: 0; font-size: 16px;">
-                    🎯 <strong>{suggestion['name']}</strong> | 📍 Location: {suggestion['location']} | 🥗 Diet: {suggestion['diet']} | 🎨 Theme: {suggestion['theme']}
-                    </p>
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
+            with st.container():
+                st.markdown("🎯 **Suggested Lunch Spot**")
+                st.write(f"📍 Location: {suggestion['location']}")
+                st.write(f"🥗 Diet: {suggestion['diet']}")
+                st.write(f"🎨 Theme: {suggestion['theme']}")
         else:
             st.warning("No matching lunch options found.")
 
@@ -154,19 +149,13 @@ with main_col:
 
     with st.expander("📝 Vote List Here", expanded=False):
         for i, opt in enumerate(vote_filtered_options):
-            st.markdown(
-                f"""
-                <div style="padding: 8px; border: 1px solid #ddd; border-radius: 6px; margin-bottom: 8px; background-color: #fefefe;">
-                    <strong style="font-size: 16px;">{opt['name']}</strong><br>
-                    <span style="font-size: 13px;">📍 {opt['location']} | 🥗 {opt['diet']} | 🎨 {opt['theme']} | 👍 Votes: {opt['votes']}</span>
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
-            if st.button(f"👍 Vote for {opt['name']}", key=f"vote_{i}"):
-                opt["votes"] += 1
-                save_data(OPTIONS_FILE, st.session_state.lunch_options)
-                st.success(f"Thanks for voting for {opt['name']}!")
+            with st.container():
+                st.markdown(f"**{opt['name']}**")
+                st.write(f"📍 {opt['location']} | 🥗 {opt['diet']} | 🎨 {opt['theme']} | 👍 Votes: {opt['votes']}")
+                if st.button(f"👍 Vote for {opt['name']}", key=f"vote_{i}"):
+                    opt["votes"] += 1
+                    save_data(OPTIONS_FILE, st.session_state.lunch_options)
+                    st.success(f"Thanks for voting for {opt['name']}!")
 
     st.subheader("📋 Current Lunch Options")
     with st.expander("⚡ List of Restaurant", expanded=False):
@@ -193,7 +182,8 @@ with main_col:
 
 # --- Suggestion Column ---
 with suggestion_col:
-    st.markdown("<h3>🤔 Suggestion</h3><p>You Vote la, then see how</p>", unsafe_allow_html=True)
+    st.subheader("🤔 Suggestion")
+    st.write("You Vote la, then see how")
     if st.session_state.lunch_options:
         scores = {opt['name']: opt['votes'] for opt in st.session_state.lunch_options}
         sorted_options = sorted(st.session_state.lunch_options, key=lambda x: scores.get(x['name'], 0), reverse=True)
