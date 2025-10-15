@@ -193,8 +193,8 @@ with main_col:
             labelFontSize=9
         ).properties(
             title='Top 10 Restaurants by Vote Count',
-            width=500,
-            height=400
+            width=600,
+            height=500
         )
         st.altair_chart(chart, use_container_width=True)
         
