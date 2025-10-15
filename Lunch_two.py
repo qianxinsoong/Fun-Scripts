@@ -189,7 +189,7 @@ with main_col:
             y=alt.Y('votes', title='Vote Count'),
             color=alt.Color('name', title='Restaurant')
         ).configure_axisX(
-            labelAngle=45,
+            labelAngle=0,
             labelFontSize=10
         ).properties(
             title='Top 10 Restaurants by Vote Count',
