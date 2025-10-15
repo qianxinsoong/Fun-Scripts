@@ -6,14 +6,6 @@ import os
 import pandas as pd
 import altair as alt
 
-# Add a small note at the top left corner
-st.markdown(
-    "<div style='position: fixed; top: 10px; left: 10px; font-size: 12px; color: gray;'>"
-    "Developed by Qian Xin Soong, please report bug to <a href='mailto:qsoong@micron.com'>qsoong@micron.com</a>"
-    "</div>",
-    unsafe_allow_html=True
-)
-
 # --- Page Configuration ---
 st.set_page_config(
     page_title="Lunch Decision Dashboard",
@@ -51,6 +43,12 @@ if "suggested_spot" not in st.session_state:
 
 # --- Title ---
 st.title("🍽️ Lunch Decision Dashboard")
+
+# --- Sidebar: Developer Note ---
+st.sidebar.markdown(
+    "🛠️ **Developed by Qian Xin Soong**  \n"
+    "🐞 *Please report bugs to [qsoong@micron.com](mailto:qsoong@micron.com)*"
+)
 
 # --- Sidebar: Add new lunch option ---
 st.sidebar.header("➕ Add Lunch Option")
@@ -125,7 +123,7 @@ with main_col:
                 lat = suggestion['lat']
                 lon = suggestion['lon']
                 maps_url = f"https://www.google.com/maps/dir/?api=1&destination={lat},{lon}"
-                st.markdown(f"[🗺️ Get Directions on Google Maps]({maps_url})", unsafe_allow_html=True)
+                st.markdown(f"[🗺️ Get Directions]({maps_url})", unsafe_allow_html=True)
         else:
             st.warning("No matching lunch options found.")
 
@@ -227,11 +225,10 @@ with suggestion_col:
         top_pick = sorted_options[0]
         st.success(f"Today's Top Pick: {top_pick['name']} ({top_pick['location']}, {top_pick['diet']}, {top_pick['theme']})")
 
-        # Google Maps Directions Link for Top Pick
         lat = top_pick['lat']
         lon = top_pick['lon']
         maps_url = f"https://www.google.com/maps/dir/?api=1&destination={lat},{lon}"
-        st.markdown(f"[🗺️ Get Directions on Google Maps]({maps_url})", unsafe_allow_html=True)
+        st.markdown(f"[🗺️ Get Directions]({maps_url})", unsafe_allow_html=True)
 
         st.markdown("### 🗺️ Lunch Location")
         if st.session_state.suggested_spot and "lat" in st.session_state.suggested_spot and "lon" in st.session_state.suggested_spot:
