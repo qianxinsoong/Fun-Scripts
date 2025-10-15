@@ -206,7 +206,7 @@ with main_col:
                 st.write(f"**Theme:** {opt['theme']}")
                 st.write(f"**Votes:** {opt['votes']}")
 
-    st.markdown("### 📊 Voting Trends (Top 10 Restaurants)")
+    st.markdown("### 📊 Voting Trends (Which Restaurants to go?)")
     df_votes = pd.DataFrame(lunch_options)
     if "votes" not in df_votes.columns:
         st.info("No vote data available.")
