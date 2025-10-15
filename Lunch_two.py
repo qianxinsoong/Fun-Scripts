@@ -205,21 +205,29 @@ with main_col:
                 st.write(f"**Dietary Preference:** {opt['diet']}")
                 st.write(f"**Theme:** {opt['theme']}")
                 st.write(f"**Votes:** {opt['votes']}")
-
+   
     st.markdown("### 📊 Voting Trends (Top 10 Restaurants)")
-    df_votes = pd.DataFrame(lunch_options)
-    if not df_votes.empty and "name" in df_votes.columns and "votes" in df_votes.columns:
-        top_10_restaurants = df_votes.sort_values(by="votes", ascending=False).head(10)
-        chart = alt.Chart(top_10_restaurants).mark_bar().encode(
-            x=alt.X('name', sort='-y', title='Restaurant Name'),
-            y=alt.Y('votes', title='Vote Count'),
-            color=alt.Color('name', title='Restaurant')
-        ).properties(
-            title='Top 10 Restaurants by Vote Count',
-            width=500,
-            height=400
-        )
-        st.altair_chart(chart, use_container_width=True)
+        df_votes = pd.DataFrame(st.session_state.lunch_options)
+        if not df_votes.empty and "name" in df_votes.columns and "votes" in df_votes.columns:
+            top_10_restaurants = df_votes.sort_values(by="votes", ascending=False).head(10)
+            chart = alt.Chart(top_10_restaurants).mark_bar().encode(
+                x=alt.X('name', sort='-y', title='Restaurant Name'),
+                y=alt.Y('votes', title='Vote Count'),
+                color=alt.Color('name', title='Restaurant')
+            ).configure_axisX(
+                labelAngle=90,
+                labelFontSize=10
+            ).configure_axisY(
+                labelFontSize=10
+            ).configure_legend(
+                labelFontSize=11,
+                titleFontSize=12
+            ).properties(
+                title='Top 10 Restaurants by Vote Count',
+                width=500,
+                height=400
+            )
+            st.altair_chart(chart, use_container_width=True)
 
     st.subheader("📝 Vote History")
     if vote_history:
