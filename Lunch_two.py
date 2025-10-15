@@ -182,12 +182,12 @@ with main_col:
 
     st.markdown("### 📊 Voting Trends by Theme")
     df_votes = pd.DataFrame(st.session_state.lunch_options)
-    if not df_votes.empty and "theme" in df_votes.columns:
+    if not df_votes.empty and "restaurant" in df_votes.columns:
         df_theme_votes = df_votes.groupby('theme', as_index=False)['votes'].sum()
         chart = alt.Chart(df_theme_votes).mark_bar().encode(
-            x=alt.X('theme', sort='-y', title='Theme'),
+            x=alt.X('restaurant', sort='-y', title='Restaurant'),
             y=alt.Y('votes', title='Votes'),
-            color=alt.Color('theme', title='Theme')
+            color=alt.Color('restaurant', title=Restaurant')
         ).properties(
             width=400,
             height=300,
