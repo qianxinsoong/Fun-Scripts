@@ -6,10 +6,10 @@ import os
 import pandas as pd
 import altair as alt
 
-# --- Developer Note ---
+# Add a small note at the top left corner
 st.markdown(
     "<div style='position: fixed; top: 10px; left: 10px; font-size: 12px; color: gray;'>"
-    "Developed by Qian Xin Soong, please report bug to mailto:qsoong@micron.comqsoong@micron.com</a>"
+    "Developed by Qian Xin Soong, please report bug to <a href='mailto:qsoong@micron.com'>qsoong@micron.com</a>"
     "</div>",
     unsafe_allow_html=True
 )
@@ -125,7 +125,7 @@ with main_col:
                 lat = suggestion['lat']
                 lon = suggestion['lon']
                 maps_url = f"https://www.google.com/maps/dir/?api=1&destination={lat},{lon}"
-                st.markdown(f"{maps_url}", unsafe_allow_html=True)
+                st.markdown(f"[🗺️ Get Directions on Google Maps]({maps_url})", unsafe_allow_html=True)
         else:
             st.warning("No matching lunch options found.")
 
@@ -231,7 +231,7 @@ with suggestion_col:
         lat = top_pick['lat']
         lon = top_pick['lon']
         maps_url = f"https://www.google.com/maps/dir/?api=1&destination={lat},{lon}"
-        st.markdown(f"{maps_url}", unsafe_allow_html=True)
+        st.markdown(f"[🗺️ Get Directions on Google Maps]({maps_url})", unsafe_allow_html=True)
 
         st.markdown("### 🗺️ Lunch Location")
         if st.session_state.suggested_spot and "lat" in st.session_state.suggested_spot and "lon" in st.session_state.suggested_spot:
