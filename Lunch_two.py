@@ -6,14 +6,6 @@ import os
 import pandas as pd
 import altair as alt
 
-# --- Page Configuration ---
-st.set_page_config(
-    page_title="Lunch Decision Dashboard",
-    page_icon="🍽️",
-    layout="wide",
-    initial_sidebar_state="expanded"
-)
-
 # --- File paths ---
 OPTIONS_FILE = "lunch_options_with_theme.json"
 RECORD_FILE = "lunch_record.json"
@@ -28,8 +20,15 @@ st.sidebar.markdown(
     unsafe_allow_html=True
 )
 
-# --- Load and Save JSON with Caching ---
-@st.cache_data
+# --- Page Configuration ---
+st.set_page_config(
+    page_title="Lunch Decision Dashboard",
+    page_icon="🍽️",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
+
+# --- Load and Save JSON ---
 def load_data(file_path, default_data):
     if os.path.exists(file_path):
         with open(file_path, "r") as f:
@@ -41,16 +40,12 @@ def save_data(file_path, data):
     with open(file_path, "w") as f:
         json.dump(data, f, indent=2)
 
+# --- Load data from disk ---
+lunch_options = load_data(OPTIONS_FILE, [])
+lunch_record = load_data(RECORD_FILE, [])
+vote_history = load_data(VOTE_HISTORY_FILE, [])
+
 # --- Initialize session state ---
-if "lunch_options" not in st.session_state:
-    st.session_state.lunch_options = load_data(OPTIONS_FILE, [])
-
-if "lunch_record" not in st.session_state:
-    st.session_state.lunch_record = load_data(RECORD_FILE, [])
-
-if "vote_history" not in st.session_state:
-    st.session_state.vote_history = load_data(VOTE_HISTORY_FILE, [])
-
 if "suggested_spot" not in st.session_state:
     st.session_state.suggested_spot = None
 
@@ -74,9 +69,9 @@ with st.sidebar.form("add_option_form"):
                 lat_val = float(lat)
                 lon_val = float(lon)
                 new_option = {"name": name, "location": location, "diet": diet, "theme": theme, "votes": 0, "lat": lat_val, "lon": lon_val}
-                if not any(opt["name"].lower() == name.lower() for opt in st.session_state.lunch_options):
-                    st.session_state.lunch_options.append(new_option)
-                    save_data(OPTIONS_FILE, st.session_state.lunch_options)
+                if not any(opt["name"].lower() == name.lower() for opt in lunch_options):
+                    lunch_options.append(new_option)
+                    save_data(OPTIONS_FILE, lunch_options)
                     st.success(f"Added {name} to lunch options.")
                 else:
                     st.warning(f"{name} is already in the list.")
@@ -92,11 +87,12 @@ admin_password = st.sidebar.text_input("Enter Admin Password", type="password")
 if admin_password == "admin123":
     st.sidebar.subheader("🔄 Reset Voting System")
     if st.sidebar.button("🔄 Reset All Votes"):
-        for option in st.session_state.lunch_options:
+        for option in lunch_options:
             option["votes"] = 0
-        save_data(OPTIONS_FILE, st.session_state.lunch_options)
-        st.cache_data.clear()
-        st.sidebar.success("✅ All votes have been reset to zero.")
+        save_data(OPTIONS_FILE, lunch_options)
+        vote_history = []
+        save_data(VOTE_HISTORY_FILE, vote_history)
+        st.sidebar.success("✅ All votes and history have been reset.")
 elif admin_password:
     st.sidebar.error("❌ Incorrect password.")
 
@@ -106,12 +102,12 @@ main_col, suggestion_col = st.columns([3, 2])
 # --- Main Column ---
 with main_col:
     st.subheader("🔍 Filter & Suggest Lunch Spot")
-    filter_location = st.selectbox("Filter by Location", ["Any"] + sorted(set(opt["location"] for opt in st.session_state.lunch_options)))
-    filter_diet = st.selectbox("Filter by Dietary Preference", sorted(set(opt["diet"] for opt in st.session_state.lunch_options)))
-    filter_theme = st.selectbox("Filter by Theme", ["Any"] + sorted(set(opt["theme"] for opt in st.session_state.lunch_options)))
+    filter_location = st.selectbox("Filter by Location", ["Any"] + sorted(set(opt["location"] for opt in lunch_options)))
+    filter_diet = st.selectbox("Filter by Dietary Preference", sorted(set(opt["diet"] for opt in lunch_options)))
+    filter_theme = st.selectbox("Filter by Theme", ["Any"] + sorted(set(opt["theme"] for opt in lunch_options)))
 
     filtered_options = [
-        opt for opt in st.session_state.lunch_options
+        opt for opt in lunch_options
         if (filter_location == "Any" or opt["location"] == filter_location) and
            (filter_diet == "Any" or opt["diet"] == filter_diet) and
            (filter_theme == "Any" or opt["theme"] == filter_theme)
@@ -136,8 +132,8 @@ with main_col:
 
     st.subheader("🍴 Today's Lunch Record")
     today = datetime.date.today().strftime("%Y-%m-%d")
-    group_name = st.text_input("Enter Group Name (e.g., QA Team, Engineering A, Lunch Buddies)")
-    selected_place = st.selectbox("Where did this group go for lunch today?", options=[opt["name"] for opt in st.session_state.lunch_options], index=0)
+    group_name = st.text_input("Enter Group Name")
+    selected_place = st.selectbox("Where did this group go for lunch today?", options=[opt["name"] for opt in lunch_options], index=0)
 
     if st.button("📍 Record Group's Lunch"):
         if group_name:
@@ -146,15 +142,15 @@ with main_col:
                 "group": group_name,
                 "place": selected_place
             }
-            st.session_state.lunch_record.append(record_entry)
-            save_data(RECORD_FILE, st.session_state.lunch_record)
+            lunch_record.append(record_entry)
+            save_data(RECORD_FILE, lunch_record)
             st.success(f"Recorded: {group_name} went to {selected_place} on {today}")
         else:
             st.warning("Please enter a group name.")
 
     st.markdown("### 📆 Past Lunch Records by Group")
-    if st.session_state.lunch_record:
-        df_records = pd.DataFrame(st.session_state.lunch_record)
+    if lunch_record:
+        df_records = pd.DataFrame(lunch_record)
         required_columns = {"date", "group", "place"}
         if required_columns.issubset(df_records.columns):
             grouped = df_records.groupby(['date', 'group'], as_index=False)['place'].agg(lambda x: ', '.join(x))
@@ -166,13 +162,13 @@ with main_col:
         st.info("No lunch records yet.")
 
     st.subheader("📊 Vote for Your Favorite")
-    voter_name = st.text_input("Enter Your Name (for vote tracking)")
-    vote_location = st.selectbox("Filter by Location (Voting)", ["Any"] + sorted(set(opt["location"] for opt in st.session_state.lunch_options)))
-    vote_diet = st.selectbox("Filter by Dietary Preference (Voting)", sorted(set(opt["diet"] for opt in st.session_state.lunch_options)))
-    vote_theme = st.selectbox("Filter by Theme (Voting)", ["Any"] + sorted(set(opt["theme"] for opt in st.session_state.lunch_options)))
+    voter_name = st.text_input("Enter Your Name")
+    vote_location = st.selectbox("Filter by Location (Voting)", ["Any"] + sorted(set(opt["location"] for opt in lunch_options)))
+    vote_diet = st.selectbox("Filter by Dietary Preference (Voting)", sorted(set(opt["diet"] for opt in lunch_options)))
+    vote_theme = st.selectbox("Filter by Theme (Voting)", ["Any"] + sorted(set(opt["theme"] for opt in lunch_options)))
 
     vote_filtered_options = [
-        opt for opt in st.session_state.lunch_options
+        opt for opt in lunch_options
         if (vote_location == "Any" or opt["location"] == vote_location) and
            (vote_diet == "Any" or opt["diet"] == vote_diet) and
            (vote_theme == "Any" or opt["theme"] == vote_theme)
@@ -189,21 +185,21 @@ with main_col:
                 if st.button(f"👍 Vote for {opt['name']}", key=f"vote_{i}"):
                     if voter_name.strip():
                         opt["votes"] += 1
-                        save_data(OPTIONS_FILE, st.session_state.lunch_options)
+                        save_data(OPTIONS_FILE, lunch_options)
                         vote_entry = {
                             "restaurant": opt["name"],
                             "voter": voter_name.strip(),
                             "timestamp": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
                         }
-                        st.session_state.vote_history.append(vote_entry)
-                        save_data(VOTE_HISTORY_FILE, st.session_state.vote_history)
+                        vote_history.append(vote_entry)
+                        save_data(VOTE_HISTORY_FILE, vote_history)
                         st.success(f"Thanks {voter_name} for voting for {opt['name']}!")
                     else:
-                        st.warning("Please enter your name to vote.")
+                        st.warning("Please enter your name before voting.")
 
     st.subheader("📋 Current Lunch Options")
     with st.expander("⚡ List of Restaurant", expanded=False):
-        for opt in st.session_state.lunch_options:
+        for opt in lunch_options:
             with st.expander(f"{opt['name']}", expanded=False):
                 st.write(f"**Location:** {opt['location']}")
                 st.write(f"**Dietary Preference:** {opt['diet']}")
@@ -211,21 +207,13 @@ with main_col:
                 st.write(f"**Votes:** {opt['votes']}")
 
     st.markdown("### 📊 Voting Trends (Top 10 Restaurants)")
-    df_votes = pd.DataFrame(st.session_state.lunch_options)
+    df_votes = pd.DataFrame(lunch_options)
     if not df_votes.empty and "name" in df_votes.columns and "votes" in df_votes.columns:
         top_10_restaurants = df_votes.sort_values(by="votes", ascending=False).head(10)
         chart = alt.Chart(top_10_restaurants).mark_bar().encode(
             x=alt.X('name', sort='-y', title='Restaurant Name'),
             y=alt.Y('votes', title='Vote Count'),
             color=alt.Color('name', title='Restaurant')
-        ).configure_axisX(
-            labelAngle=90,
-            labelFontSize=10
-        ).configure_axisY(
-            labelFontSize=10
-        ).configure_legend(
-            labelFontSize=11,
-            titleFontSize=12
         ).properties(
             title='Top 10 Restaurants by Vote Count',
             width=500,
@@ -234,8 +222,8 @@ with main_col:
         st.altair_chart(chart, use_container_width=True)
 
     st.subheader("📝 Vote History")
-    if st.session_state.vote_history:
-        df_history = pd.DataFrame(st.session_state.vote_history)
+    if vote_history:
+        df_history = pd.DataFrame(vote_history)
         st.dataframe(df_history.sort_values(by="timestamp", ascending=False), use_container_width=True)
     else:
         st.info("No votes recorded yet.")
@@ -244,9 +232,9 @@ with main_col:
 with suggestion_col:
     st.markdown("## 🤔 Suggestion")
     st.write("You Vote la, then see how")
-    if st.session_state.lunch_options:
-        scores = {opt['name']: opt['votes'] for opt in st.session_state.lunch_options}
-        sorted_options = sorted(st.session_state.lunch_options, key=lambda x: scores.get(x['name'], 0), reverse=True)
+    if lunch_options:
+        scores = {opt['name']: opt['votes'] for opt in lunch_options}
+        sorted_options = sorted(lunch_options, key=lambda x: scores.get(x['name'], 0), reverse=True)
         top_pick = sorted_options[0]
         st.success(f"Today's Top Pick: {top_pick['name']} ({top_pick['location']}, {top_pick['diet']}, {top_pick['theme']})")
 
@@ -263,11 +251,11 @@ with suggestion_col:
             }])
             st.map(map_data)
         else:
-            default_map_data = pd.DataFrame([{"lat": 5.2189, "lon": 100.4491}])  # Batu Kawan default
+            default_map_data = pd.DataFrame([{"lat": 5.2189, "lon": 100.4491}])
             st.map(default_map_data)
 
         st.markdown("### 📈 Dashboard Stats")
-        st.metric("Total Votes", sum(opt["votes"] for opt in st.session_state.lunch_options))
-        st.metric("Lunch Records", len(st.session_state.lunch_record))
+        st.metric("Total Votes", sum(opt["votes"] for opt in lunch_options))
+        st.metric("Lunch Records", len(lunch_record))
     else:
         st.info("Add lunch options to get smart suggestions.")
