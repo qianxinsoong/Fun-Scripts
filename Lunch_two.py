@@ -190,12 +190,12 @@ with main_col:
             color=alt.Color('name', title='Restaurant')
         ).configure_axisX(
             labelAngle=90,
-            labelFontSize=9
+            labelFontSize=9.5
         ).configure_axisY(
-            labelFontSize=9
+            labelFontSize=9.5
         ).configure_legend(
-            labelFontSize=9,
-            titleFontSize=10
+            labelFontSize=10,
+            titleFontSize=11
         ).properties(
             title='Top 10 Restaurants by Vote Count',
             width=500,
