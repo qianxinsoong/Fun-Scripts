@@ -9,6 +9,15 @@
         "lon": 100.4376
     },
     {
+        "name": "Gravy Baby Auto City",
+        "location": "Auto City",
+        "diet": "Halal",
+        "theme": "Western",
+        "votes": 0,
+        "lat": 5.3371,
+        "lon": 100.4277
+    },
+    {
         "name": "Temp Cafe",
         "location": "Vervea",
         "diet": "Halal",
