@@ -1,14 +1,5 @@
 [
     {
-        "name": "Meetcha Cafe & Eatery",
-        "location": "Vervea",
-        "diet": "Any",
-        "theme": "Fusion",
-        "votes": 0,
-        "lat": 5.2645,
-        "lon": 100.4375
-    },
-    {
         "name": "Pan Pan Restaurant",
         "location": "Vervea",
         "diet": "Halal",
