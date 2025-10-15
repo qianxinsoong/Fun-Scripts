@@ -180,19 +180,22 @@ with main_col:
                 st.write(f"**Theme:** {opt['theme']}")
                 st.write(f"**Votes:** {opt['votes']}")
 
-    st.markdown("### 📊 Voting Trends by Theme")
+    st.markdown("### 📊 Voting Trends (Top 10 Restaurants)")
     df_votes = pd.DataFrame(st.session_state.lunch_options)
-    if not df_votes.empty and "restaurant" in df_votes.columns:
-        df_theme_votes = df_votes.groupby('theme', as_index=False)['votes'].sum()
-        chart = alt.Chart(df_theme_votes).mark_bar().encode(
-            x=alt.X('restaurant', sort='-y', title='Restaurant'),
-            y=alt.Y('votes', title='Votes'),
-            color=alt.Color('restaurant', title=Restaurant')
+    if not df_votes.empty and "name" in df_votes.columns and "votes" in df_votes.columns:
+        top_10_restaurants = df_votes.sort_values(by="votes", ascending=False).head(10)
+        chart = alt.Chart(top_10_restaurants).mark_bar().encode(
+            x=alt.X('name', sort='-y', title='Restaurant Name'),
+            y=alt.Y('votes', title='Vote Count'),
+            color=alt.Color('name', title='Restaurant')
         ).properties(
-            width=400,
-            height=300,
+            title='Top 10 Restaurants by Vote Count',
+            width=600,
+            height=400
         )
         st.altair_chart(chart, use_container_width=True)
+    else:
+        st.warning("No restaurant data available to display chart.")
 
 # --- Suggestion Column ---
 with suggestion_col:
