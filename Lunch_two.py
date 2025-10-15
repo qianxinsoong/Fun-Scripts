@@ -14,6 +14,15 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
+# --- Sidebar: Developer Note ---
+st.sidebar.markdown(
+    "<p style='font-size: 10pt; color: gray;'>"
+    "🛠️ <strong>Developed by Qian Xin Soong</strong><br>"
+    "🐞 Please report bugs to <a href='mailto:qsoong@micron.com'>qsoong@micron.com</a>"
+    "</p>",
+    unsafe_allow_html=True
+)
+
 # --- File paths ---
 OPTIONS_FILE = "lunch_options_with_theme.json"
 RECORD_FILE = "lunch_record.json"
@@ -43,15 +52,6 @@ if "suggested_spot" not in st.session_state:
 
 # --- Title ---
 st.title("🍽️ Lunch Decision Dashboard")
-
-# --- Sidebar: Developer Note ---
-st.sidebar.markdown(
-    "<p style='font-size: 10pt; color: gray;'>"
-    "🛠️ <strong>Developed by Qian Xin Soong</strong><br>"
-    "🐞 Report bugs to qsoong@micron.com</a>"
-    "</p>",
-    unsafe_allow_html=True
-)
 
 # --- Sidebar: Add new lunch option ---
 st.sidebar.header("➕ Add Lunch Option")
@@ -126,7 +126,7 @@ with main_col:
                 lat = suggestion['lat']
                 lon = suggestion['lon']
                 maps_url = f"https://www.google.com/maps/dir/?api=1&destination={lat},{lon}"
-                st.markdown(f"[🗺️ Get Directions]({maps_url})", unsafe_allow_html=True)
+                st.markdown(f"[🗺️ Directions]({maps_url})", unsafe_allow_html=True)
         else:
             st.warning("No matching lunch options found.")
 
@@ -231,7 +231,7 @@ with suggestion_col:
         lat = top_pick['lat']
         lon = top_pick['lon']
         maps_url = f"https://www.google.com/maps/dir/?api=1&destination={lat},{lon}"
-        st.markdown(f"[🗺️ Get Directions]({maps_url})", unsafe_allow_html=True)
+        st.markdown(f"[🗺️ Directions]({maps_url})", unsafe_allow_html=True)
 
         st.markdown("### 🗺️ Lunch Location")
         if st.session_state.suggested_spot and "lat" in st.session_state.suggested_spot and "lon" in st.session_state.suggested_spot:
