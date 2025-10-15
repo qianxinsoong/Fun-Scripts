@@ -48,7 +48,7 @@ st.title("🍽️ Lunch Decision Dashboard")
 st.sidebar.markdown(
     "<p style='font-size: 10pt; color: gray;'>"
     "🛠️ <strong>Developed by Qian Xin Soong</strong><br>"
-    "🐞 Please report bugs to mailto:qsoong@micron.comqsoong@micron.com</a>"
+    "🐞 Please report bugs to qsoong@micron.com</a>"
     "</p>",
     unsafe_allow_html=True
 )
