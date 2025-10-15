@@ -191,6 +191,8 @@ with main_col:
         ).configure_axisX(
             labelAngle=90,
             labelFontSize=9
+        ).configure_axisY(
+            labelFontSize=9
         ).properties(
             title='Top 10 Restaurants by Vote Count',
             width=500,
