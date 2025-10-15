@@ -193,8 +193,9 @@ with main_col:
             labelFontSize=9
         ).configure_axisY(
             labelFontSize=9
-        ).configure_legends(
-            labelFontSize=9
+        ).configure_legend(
+            labelFontSize=9,
+            titleFontSize=10
         ).properties(
             title='Top 10 Restaurants by Vote Count',
             width=500,
