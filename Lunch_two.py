@@ -46,8 +46,11 @@ st.title("🍽️ Lunch Decision Dashboard")
 
 # --- Sidebar: Developer Note ---
 st.sidebar.markdown(
-    "🛠️ **Developed by Qian Xin Soong**  \n"
-    "🐞 *Please report bugs to [qsoong@micron.com](mailto:qsoong@micron.com)*"
+    "<p style='font-size: 10pt; color: gray;'>"
+    "🛠️ <strong>Developed by Qian Xin Soong</strong><br>"
+    "🐞 Please report bugs to mailto:qsoong@micron.comqsoong@micron.com</a>"
+    "</p>",
+    unsafe_allow_html=True
 )
 
 # --- Sidebar: Add new lunch option ---
