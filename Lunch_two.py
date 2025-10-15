@@ -14,6 +14,11 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
+# --- File paths ---
+OPTIONS_FILE = "lunch_options_with_theme.json"
+RECORD_FILE = "lunch_record.json"
+VOTE_HISTORY_FILE = "vote_history.json"
+
 # --- Sidebar: Developer Note ---
 st.sidebar.markdown(
     "<p style='font-size: 10pt; color: gray;'>"
@@ -22,10 +27,6 @@ st.sidebar.markdown(
     "</p>",
     unsafe_allow_html=True
 )
-
-# --- File paths ---
-OPTIONS_FILE = "lunch_options_with_theme.json"
-RECORD_FILE = "lunch_record.json"
 
 # --- Load and Save JSON with Caching ---
 @st.cache_data
@@ -46,6 +47,9 @@ if "lunch_options" not in st.session_state:
 
 if "lunch_record" not in st.session_state:
     st.session_state.lunch_record = load_data(RECORD_FILE, [])
+
+if "vote_history" not in st.session_state:
+    st.session_state.vote_history = load_data(VOTE_HISTORY_FILE, [])
 
 if "suggested_spot" not in st.session_state:
     st.session_state.suggested_spot = None
@@ -126,7 +130,7 @@ with main_col:
                 lat = suggestion['lat']
                 lon = suggestion['lon']
                 maps_url = f"https://www.google.com/maps/dir/?api=1&destination={lat},{lon}"
-                st.markdown(f"[🗺️ Directions]({maps_url})", unsafe_allow_html=True)
+                st.markdown(f"[🗺️ Get Directions]({maps_url})", unsafe_allow_html=True)
         else:
             st.warning("No matching lunch options found.")
 
@@ -162,6 +166,7 @@ with main_col:
         st.info("No lunch records yet.")
 
     st.subheader("📊 Vote for Your Favorite")
+    voter_name = st.text_input("Enter Your Name (for vote tracking)")
     vote_location = st.selectbox("Filter by Location (Voting)", ["Any"] + sorted(set(opt["location"] for opt in st.session_state.lunch_options)))
     vote_diet = st.selectbox("Filter by Dietary Preference (Voting)", sorted(set(opt["diet"] for opt in st.session_state.lunch_options)))
     vote_theme = st.selectbox("Filter by Theme (Voting)", ["Any"] + sorted(set(opt["theme"] for opt in st.session_state.lunch_options)))
@@ -182,9 +187,19 @@ with main_col:
                 st.write(f"🎨 Theme: {opt['theme']}")
                 st.write(f"👍 Votes: {opt['votes']}")
                 if st.button(f"👍 Vote for {opt['name']}", key=f"vote_{i}"):
-                    opt["votes"] += 1
-                    save_data(OPTIONS_FILE, st.session_state.lunch_options)
-                    st.success(f"Thanks for voting for {opt['name']}!")
+                    if voter_name.strip():
+                        opt["votes"] += 1
+                        save_data(OPTIONS_FILE, st.session_state.lunch_options)
+                        vote_entry = {
+                            "restaurant": opt["name"],
+                            "voter": voter_name.strip(),
+                            "timestamp": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                        }
+                        st.session_state.vote_history.append(vote_entry)
+                        save_data(VOTE_HISTORY_FILE, st.session_state.vote_history)
+                        st.success(f"Thanks {voter_name} for voting for {opt['name']}!")
+                    else:
+                        st.warning("Please enter your name to vote.")
 
     st.subheader("📋 Current Lunch Options")
     with st.expander("⚡ List of Restaurant", expanded=False):
@@ -218,6 +233,13 @@ with main_col:
         )
         st.altair_chart(chart, use_container_width=True)
 
+    st.subheader("📝 Vote History")
+    if st.session_state.vote_history:
+        df_history = pd.DataFrame(st.session_state.vote_history)
+        st.dataframe(df_history.sort_values(by="timestamp", ascending=False), use_container_width=True)
+    else:
+        st.info("No votes recorded yet.")
+
 # --- Suggestion Column ---
 with suggestion_col:
     st.markdown("## 🤔 Suggestion")
@@ -231,7 +253,7 @@ with suggestion_col:
         lat = top_pick['lat']
         lon = top_pick['lon']
         maps_url = f"https://www.google.com/maps/dir/?api=1&destination={lat},{lon}"
-        st.markdown(f"[🗺️ Directions]({maps_url})", unsafe_allow_html=True)
+        st.markdown(f"[🗺️ Get Directions]({maps_url})", unsafe_allow_html=True)
 
         st.markdown("### 🗺️ Lunch Location")
         if st.session_state.suggested_spot and "lat" in st.session_state.suggested_spot and "lon" in st.session_state.suggested_spot:
