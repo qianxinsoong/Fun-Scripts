@@ -112,6 +112,10 @@ with main_col:
                 st.write(f"📍 Location: {suggestion['location']}")
                 st.write(f"🥗 Diet: {suggestion['diet']}")
                 st.write(f"🎨 Theme: {suggestion['theme']}")
+                lat = suggestion['lat']
+                lon = suggestion['lon']
+                maps_url = f"https://www.google.com/maps/dir/?api=1&destination={lat},{lon}"
+                st.markdown(f"[🗺️ Get Directions]({maps_url})", unsafe_allow_html=True)
         else:
             st.warning("No matching lunch options found.")
 
@@ -202,7 +206,7 @@ with main_col:
             height=400
         )
         st.altair_chart(chart, use_container_width=True)
-        
+
 # --- Suggestion Column ---
 with suggestion_col:
     st.markdown("## 🤔 Suggestion")
@@ -212,6 +216,12 @@ with suggestion_col:
         sorted_options = sorted(st.session_state.lunch_options, key=lambda x: scores.get(x['name'], 0), reverse=True)
         top_pick = sorted_options[0]
         st.success(f"Today's Top Pick: {top_pick['name']} ({top_pick['location']}, {top_pick['diet']}, {top_pick['theme']})")
+
+        # Google Maps Directions Link for Top Pick
+        lat = top_pick['lat']
+        lon = top_pick['lon']
+        maps_url = f"https://www.google.com/maps/dir/?api=1&destination={lat},{lon}"
+        st.markdown(f"[🗺️ Get Directions]({maps_url})", unsafe_allow_html=True)
 
         st.markdown("### 🗺️ Lunch Location")
         if st.session_state.suggested_spot and "lat" in st.session_state.suggested_spot and "lon" in st.session_state.suggested_spot:
