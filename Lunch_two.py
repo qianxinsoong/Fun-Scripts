@@ -189,12 +189,12 @@ with main_col:
             y=alt.Y('votes', title='Vote Count'),
             color=alt.Color('name', title='Restaurant')
         ).configure_axisX(
-            labelAngle=270,
+            labelAngle=90,
             labelFontSize=9
         ).properties(
             title='Top 10 Restaurants by Vote Count',
-            width=600,
-            height=500
+            width=500,
+            height=400
         )
         st.altair_chart(chart, use_container_width=True)
         
