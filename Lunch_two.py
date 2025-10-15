@@ -6,6 +6,14 @@ import os
 import pandas as pd
 import altair as alt
 
+# --- Developer Note ---
+st.markdown(
+    "<div style='position: fixed; top: 10px; left: 10px; font-size: 12px; color: gray;'>"
+    "Developed by Qian Xin Soong, please report bug to mailto:qsoong@micron.comqsoong@micron.com</a>"
+    "</div>",
+    unsafe_allow_html=True
+)
+
 # --- Page Configuration ---
 st.set_page_config(
     page_title="Lunch Decision Dashboard",
@@ -18,7 +26,8 @@ st.set_page_config(
 OPTIONS_FILE = "lunch_options_with_theme.json"
 RECORD_FILE = "lunch_record.json"
 
-# --- Load and Save JSON ---
+# --- Load and Save JSON with Caching ---
+@st.cache_data
 def load_data(file_path, default_data):
     if os.path.exists(file_path):
         with open(file_path, "r") as f:
@@ -81,6 +90,7 @@ if admin_password == "admin123":
         for option in st.session_state.lunch_options:
             option["votes"] = 0
         save_data(OPTIONS_FILE, st.session_state.lunch_options)
+        st.cache_data.clear()
         st.sidebar.success("✅ All votes have been reset to zero.")
 elif admin_password:
     st.sidebar.error("❌ Incorrect password.")
@@ -115,7 +125,7 @@ with main_col:
                 lat = suggestion['lat']
                 lon = suggestion['lon']
                 maps_url = f"https://www.google.com/maps/dir/?api=1&destination={lat},{lon}"
-                st.markdown(f"[🗺️ Get Directions]({maps_url})", unsafe_allow_html=True)
+                st.markdown(f"{maps_url}", unsafe_allow_html=True)
         else:
             st.warning("No matching lunch options found.")
 
@@ -221,7 +231,7 @@ with suggestion_col:
         lat = top_pick['lat']
         lon = top_pick['lon']
         maps_url = f"https://www.google.com/maps/dir/?api=1&destination={lat},{lon}"
-        st.markdown(f"[🗺️ Get Directions]({maps_url})", unsafe_allow_html=True)
+        st.markdown(f"{maps_url}", unsafe_allow_html=True)
 
         st.markdown("### 🗺️ Lunch Location")
         if st.session_state.suggested_spot and "lat" in st.session_state.suggested_spot and "lon" in st.session_state.suggested_spot:
