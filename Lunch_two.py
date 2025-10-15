@@ -188,15 +188,16 @@ with main_col:
             x=alt.X('name', sort='-y', title='Restaurant Name'),
             y=alt.Y('votes', title='Vote Count'),
             color=alt.Color('name', title='Restaurant')
+        ).configure_axisX(
+            labelAngle=45,
+            labelFontSize=10
         ).properties(
             title='Top 10 Restaurants by Vote Count',
-            width=600,
-            height=400
+            width=700,
+            height=500
         )
         st.altair_chart(chart, use_container_width=True)
-    else:
-        st.warning("No restaurant data available to display chart.")
-
+        
 # --- Suggestion Column ---
 with suggestion_col:
     st.markdown("## 🤔 Suggestion")
