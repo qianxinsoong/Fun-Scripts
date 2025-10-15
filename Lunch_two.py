@@ -190,8 +190,8 @@ with main_col:
             color=alt.Color('name', title='Restaurant')
         ).properties(
             title='Top 10 Restaurants by Vote Count',
-            width=800,
-            height=500
+            width=600,
+            height=400
         )
         st.altair_chart(chart, use_container_width=True)
     else:
